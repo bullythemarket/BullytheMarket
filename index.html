@@ -1,5 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>$BTM – Bully the Market · Presale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b0b0b;
+            color: #eaeaea;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        a { color: #ffd700; text-decoration: none; }
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 30% 40%, #1a1a1a 0%, #000 90%);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .gold-text { color: #ffd700; }
+        .btn-primary {
+            display: inline-block;
+            background: #ffd700;
+            color: #0b0b0b;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 0 30px rgba(255,215,0,0.25);
+            text-align: center;
+        }
+        .btn-primary:hover { transform: scale(1.04); box-shadow: 0 0 50px rgba(255,215,0,0.5); }
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #ffd700;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,215,0,0.6);
+            cursor: pointer;
+            transition: 0.25s;
+            text-align: center;
+        }
+        .btn-secondary:hover { background: rgba(255,215,0,0.15); border-color: #ffd700; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.1);
+            margin-bottom: 30px;
+        }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 1px; }
+        .logo span { color: #ffd700; }
+        .header .badge {
+            background: rgba(255,215,0,0.15);
+            border: 1px solid rgba(255,215,0,0.4);
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #ffd700;
+            white-space: nowrap;
+        }
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0 40px;
+            animation: fadeUp 0.8s ease-out;
+        }
+        .hero .freedom-badge {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.5);
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 12vw, 6rem);
+            line-height: 1;
+            letter-spacing: 2px;
+            margin-bottom: 0.1em;
+        }
+        .hero .sub {
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
+            font-weight: 400;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .hero .tagline {
+            font-size: clamp(1.2rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero .manifesto {
+            max-width: 720px;
+            font-size: 1rem;
+            color: #ccc;
+            border-left: 3px solid #ffd700;
+            padding-left: 20px;
+            text-align: left;
+            margin: 20px auto 30px;
+            line-height: 1.7;
+        }
+        .hero .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .story {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+            margin: 50px 0;
+        }
+        .story-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 16px; }
+        .story-text p { color: #bbb; margin-bottom: 14px; font-size: 1rem; }
+        .story-image {
+            background: radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 70%);
+            border-radius: 32px;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            border: 1px solid rgba(255,215,0,0.15);
+        }
+        .tokenomics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .token-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 20px 12px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.08);
+            transition: 0.3s;
+        }
+        .token-card:hover { border-color: rgba(255,215,0,0.3); transform: translateY(-4px); }
+        .token-card .number { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #ffd700; }
+        .token-card .label { font-size: 0.85rem; color: #999; margin-top: 6px; }
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .roadmap-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            padding: 20px 16px;
+            border-left: 4px solid #ffd700;
+            transition: 0.3s;
+        }
+        .roadmap-item:hover { background: rgba(255,215,0,0.05); }
+        .roadmap-item .phase { font-weight: 700; color: #ffd700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .roadmap-item .desc { font-size: 0.95rem; color: #aaa; margin-top: 6px; }
+        .presale-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 32px;
+            border: 1px solid rgba(255,215,0,0.15);
+            padding: 30px 20px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .presale-box .timer {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            color: #ffd700;
+            letter-spacing: 2px;
+            margin: 12px 0;
+        }
+        .presale-box .rate {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin: 8px 0;
+        }
+        .presale-box .cap {
+            font-size: 1rem;
+            color: #aaa;
+            margin: 4px 0 12px;
+        }
+        .presale-box .address-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            background: #1a1a1a;
+            border-radius: 60px;
+            padding: 10px 16px;
+            margin: 20px 0;
+            border: 1px solid #333;
+        }
+        .presale-box .address-row code {
+            font-size: 1rem;
+            color: #ffd700;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            flex: 1;
+            min-width: 150px;
+        }
+        .presale-box .address-row button {
+            background: #ffd700;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        .presale-box .address-row button:hover { transform: scale(1.05); }
+        .presale-box .minmax {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #888;
+            margin: 12px 0;
+        }
+        .footer {
+            border-top: 1px solid #222;
+            padding: 24px 0;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .footer a { color: #ffd700; }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: float 4s ease-in-out infinite; }
+        @media (max-width: 600px) {
+            .container { padding: 0 16px; }
+            .hero h1 { font-size: 3rem; }
+            .presale-box .timer { font-size: 2.2rem; }
+            .presale-box .rate { font-size: 1.1rem; }
+            .presale-box .address-row { flex-direction: column; border-radius: 20px; padding: 16px; }
+            .presale-box .address-row code { font-size: 0.9rem; text-align: center; }
+            .presale-box .address-row button { width: 100%; justify-content: center; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .header .badge { font-size: 0.6rem; padding: 4px 8px; }
+            .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
+            .tokenomics { grid-template-columns: repeat(2, 1fr); }
+            .roadmap { grid-template-columns: 1fr; }
+            .footer { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<div class="container">
+
+    <header class="header">
+        <div class="logo"><span>$</span>BTM</div>
+        <div class="badge">🔥 Presale Live</div>
+    </header>
+
+    <section class="hero">
+        <div class="freedom-badge">🚀 FREEDOM SALE</div>
+        <h1><span class="gold-text">Bully</span><br /><span style="color:#fff;">the Market</span></h1>
+        <div class="sub">Stop being exit liquidity.</div>
+        <div class="tagline">Start rewriting the rules.</div>
+        <div class="manifesto">
+            <strong>$BTM is not a coin — it's a counter‑strike.</strong> Born from the ashes of the 2022 bear market, we engineered a token that <strong>rewards the holders, burns the weak, and redistributes power</strong> to the people. No VC backdoors, no whale dumps, no manipulation. Just pure, unadulterated <strong>financial freedom</strong>.
+        </div>
+        <div class="cta-buttons">
+            <button class="btn-primary" onclick="document.getElementById('presale').scrollIntoView({behavior:'smooth'})">⚡ Join Presale</button>
+            <a href="https://t.me/btmfans" target="_blank" class="btn-secondary" style="display:inline-block; text-decoration:none;">💬 Community</a>
+        </div>
+    </section>
+
+    <section class="story">
+        <div class="story-text">
+            <h2><span class="gold-text">The</span> Rebellion</h2>
+            <p>We watched retail traders get crushed by whales, hedge funds, and insider games. We decided to fight back.</p>
+            <p><strong>$BTM</strong> is engineered with <strong>anti‑whale</strong> mechanics, <strong>auto‑burn</strong> on every transaction, and a <strong>2% redistribution</strong> to loyal holders. The more they try to dump, the stronger we become.</p>
+            <p>This is not a meme. This is a <strong>movement</strong>.</p>
+        </div>
+        <div class="story-image float">🐂🔥</div>
+    </section>
+
+    <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
+        <span class="gold-text">Tokenomics</span> — Built to Last
+    </h2>
+    <div class="tokenomics">
+        <div class="token-card"><div class="number">1B</div><div class="label">Total Supply</div></div>
+        <div class="token-card"><div class="number">2%</div><div class="label">Redistribution</div></div>
+        <div class="token-card"><div class="number">1%</div><div class="label">Auto‑Burn</div></div>
+        <div class="token-card"><div class="number">1 Year</div><div class="label">Liquidity Lock</div></div>
+        <div class="token-card"><div class="number">0%</div><div class="label">Dev Wallet</div></div>
+        <div class="token-card"><div class="number">✅</div><div class="label">CertiK Audit</div></div>
+    </div>
+
+    <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
+        <span class="gold-text">Roadmap</span> to Dominance
+    </h2>
+    <div class="roadmap">
+        <div class="roadmap-item"><div class="phase">Phase 1</div><div class="desc">Presale launch, community building, PancakeSwap listing.</div></div>
+        <div class="roadmap-item"><div class="phase">Phase 2</div><div class="desc">CMC & CG listing – 10,000 holders.</div></div>
+        <div class="roadmap-item"><div class="phase">Phase 3</div><div class="desc">Marketing blitz, influencer partnerships.</div></div>
+        <div class="roadmap-item"><div class="phase">Phase 4</div><div class="desc">CEX listing – global expansion.</div></div>
+    </div>
+
+    <!-- PRESALE BOX -->
+    <section id="presale" class="presale-box">
+        <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
+            🔥 Presale <span class="gold-text">Live</span>
+        </h2>
+        <p style="color:#aaa; margin-bottom:8px;">Secure your $BTM before the public launch.</p>
+        <div class="timer" id="countdown">14d 00h 00m 00s</div>
+        <div class="rate">2,000,000 $BTM per 1 BNB</div>
+        <div class="cap">🔥 Presale Cap: 50 BNB</div>
+        <p style="margin:12px 0; font-size:1.05rem; color:#ccc;">
+            Send any amount of BNB (0.01 – 5 BNB) — receive tokens automatically.
+        </p>
+        <div class="address-row">
+            <code id="wallet-address">0x57C630A74562E8616f41A78Ab48f5f64c7a71087</code>
+            <button onclick="copyAddress()">📋 Copy</button>
+        </div>
+        <div class="minmax">
+            <span>Min: 0.01 BNB</span>
+            <span>Max: 5 BNB</span>
+            <span>🔒 Liquidity locked</span>
+        </div>
+        <button class="btn-primary" onclick="copyAddress()">📋 Copy Address & Send BNB</button>
+        <p style="margin-top:16px; font-size:0.9rem; color:#888;">
+            ✅ Automatic allocation — send any amount, receive proportional tokens.
+        </p>
+    </section>
+
+    <footer class="footer">
+        <span>© 2025 $BTM – Bully the Market</span>
+        <span>
+            <a href="https://t.me/btmfans" target="_blank">Telegram</a> &nbsp;|&nbsp;
+            <a href="https://x.com/yourhandle" target="_blank">Twitter</a>
+        </span>
+    </footer>
+</div>
+
 <script>
-    // PARTICLES BACKGROUND (unchanged)
+    // PARTICLES BACKGROUND
     (function particles() {
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
@@ -75,34 +456,32 @@
         const KEY = 'btm_presale_end';
         let endTime = parseInt(localStorage.getItem(KEY), 10);
         if (!endTime || isNaN(endTime)) {
-            endTime = Date.now() + 14 * 24 * 3600 * 1000; // 14 days
+            endTime = Date.now() + 14 * 24 * 3600 * 1000;
             localStorage.setItem(KEY, endTime.toString());
         }
 
         function updateDisplay() {
             const now = Date.now();
             let diff = Math.max(0, endTime - now);
-
             if (diff <= 0) {
                 timerEl.innerText = '00d 00h 00m 00s';
                 localStorage.removeItem(KEY);
                 return;
             }
-
             const totalSeconds = Math.floor(diff / 1000);
             const days = Math.floor(totalSeconds / 86400);
             const hours = Math.floor((totalSeconds % 86400) / 3600);
             const minutes = Math.floor((totalSeconds % 3600) / 60);
             const seconds = totalSeconds % 60;
-
-            timerEl.innerText = 
+            timerEl.innerText =
                 `${String(days).padStart(2, '0')}d ` +
                 `${String(hours).padStart(2, '0')}h ` +
                 `${String(minutes).padStart(2, '0')}m ` +
                 `${String(seconds).padStart(2, '0')}s`;
         }
-
         updateDisplay();
         setInterval(updateDisplay, 1000);
     })();
 </script>
+</body>
+</html>
