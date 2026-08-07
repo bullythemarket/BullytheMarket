@@ -165,8 +165,6 @@
         .token-card:hover { border-color: rgba(255,215,0,0.3); transform: translateY(-4px); }
         .token-card .number { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #ffd700; }
         .token-card .label { font-size: 0.85rem; color: #999; margin-top: 6px; }
-
-        /* ----- EXPANDED ROADMAP ----- */
         .roadmap-expanded {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -211,7 +209,6 @@
         @media (max-width: 768px) {
             .roadmap-expanded { grid-template-columns: 1fr; }
         }
-
         .presale-box {
             background: rgba(255,255,255,0.03);
             border-radius: 32px;
@@ -539,10 +536,14 @@
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
 
-        // Only set the end time if it doesn't already exist
+        // Get stored end time
         let endTime = parseInt(localStorage.getItem(KEY), 10);
-        if (!endTime || isNaN(endTime)) {
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
+        const now = Date.now();
+        const fourteenDaysMs = 14 * 24 * 3600 * 1000;
+
+        // If no stored time, or it's older than 14 days, or in the past → reset
+        if (!endTime || isNaN(endTime) || endTime < now || (endTime - now) > fourteenDaysMs * 1.5) {
+            endTime = now + fourteenDaysMs;
             localStorage.setItem(KEY, endTime.toString());
         }
 
