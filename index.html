@@ -165,22 +165,53 @@
         .token-card:hover { border-color: rgba(255,215,0,0.3); transform: translateY(-4px); }
         .token-card .number { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #ffd700; }
         .token-card .label { font-size: 0.85rem; color: #999; margin-top: 6px; }
-        .roadmap {
+
+        /* ----- EXPANDED ROADMAP ----- */
+        .roadmap-expanded {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin: 40px 0;
         }
-        .roadmap-item {
+        .roadmap-phase {
             background: rgba(255,255,255,0.02);
-            border-radius: 16px;
-            padding: 20px 16px;
+            border-radius: 20px;
+            padding: 24px 20px;
             border-left: 4px solid #ffd700;
             transition: 0.3s;
         }
-        .roadmap-item:hover { background: rgba(255,215,0,0.05); }
-        .roadmap-item .phase { font-weight: 700; color: #ffd700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-        .roadmap-item .desc { font-size: 0.95rem; color: #aaa; margin-top: 6px; }
+        .roadmap-phase:hover { background: rgba(255,215,0,0.05); }
+        .roadmap-phase .phase-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+        .roadmap-phase .phase-desc {
+            font-size: 0.95rem;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .roadmap-phase ul {
+            list-style: none;
+            padding: 0;
+        }
+        .roadmap-phase ul li {
+            padding: 4px 0;
+            font-size: 0.9rem;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .roadmap-phase ul li::before {
+            content: "⚡";
+            color: #ffd700;
+        }
+        @media (max-width: 768px) {
+            .roadmap-expanded { grid-template-columns: 1fr; }
+        }
+
         .presale-box {
             background: rgba(255,255,255,0.03);
             border-radius: 32px;
@@ -281,7 +312,6 @@
             .header .badge { font-size: 0.6rem; padding: 4px 8px; }
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
-            .roadmap { grid-template-columns: 1fr; }
             .footer { flex-direction: column; text-align: center; }
         }
     </style>
@@ -333,14 +363,68 @@
         <div class="token-card"><div class="number">✅</div><div class="label">CertiK Audit</div></div>
     </div>
 
+    <!-- EXPANDED ROADMAP -->
     <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
         <span class="gold-text">Roadmap</span> to Dominance
     </h2>
-    <div class="roadmap">
-        <div class="roadmap-item"><div class="phase">Phase 1</div><div class="desc">Presale launch, community building, PancakeSwap listing.</div></div>
-        <div class="roadmap-item"><div class="phase">Phase 2</div><div class="desc">CMC & CG listing – 10,000 holders.</div></div>
-        <div class="roadmap-item"><div class="phase">Phase 3</div><div class="desc">Marketing blitz, influencer partnerships.</div></div>
-        <div class="roadmap-item"><div class="phase">Phase 4</div><div class="desc">CEX listing – global expansion.</div></div>
+    <div class="roadmap-expanded">
+        <div class="roadmap-phase">
+            <div class="phase-title">Phase 1</div>
+            <div class="phase-desc">Foundation</div>
+            <ul>
+                <li>Presale launch (50 BNB cap)</li>
+                <li>Community building (Telegram, X)</li>
+                <li>PancakeSwap listing</li>
+                <li>Liquidity locked for 1 year</li>
+            </ul>
+        </div>
+        <div class="roadmap-phase">
+            <div class="phase-title">Phase 2</div>
+            <div class="phase-desc">Utility Rollout</div>
+            <ul>
+                <li>Snapshot governance portal live</li>
+                <li>Staking contract activated</li>
+                <li>CoinMarketCap & CoinGecko listing</li>
+                <li>10,000 holders target</li>
+            </ul>
+        </div>
+        <div class="roadmap-phase">
+            <div class="phase-title">Phase 3</div>
+            <div class="phase-desc">Ecosystem Expansion</div>
+            <ul>
+                <li>Major marketing campaign</li>
+                <li>Partnership announcements</li>
+                <li>Burn event (10% of supply)</li>
+                <li>DAO treasury established</li>
+            </ul>
+        </div>
+        <div class="roadmap-phase">
+            <div class="phase-title">Phase 4</div>
+            <div class="phase-desc">CEX & Global Growth</div>
+            <ul>
+                <li>Tier-1 CEX listing (BitMart, MEXC)</li>
+                <li>$BTM launchpad — projects launch using $BTM</li>
+                <li>NFT marketplace integration</li>
+                <li>Multi-chain expansion</li>
+            </ul>
+        </div>
+        <div class="roadmap-phase" style="grid-column: 1 / -1;">
+            <div class="phase-title">Phase 5</div>
+            <div class="phase-desc">Long-Term Vision</div>
+            <ul>
+                <li>Full DAO governance</li>
+                <li>$BTM DeFi dashboard</li>
+                <li>Ecosystem grants for developers</li>
+                <li>Global community events</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- WHITEPAPER DOWNLOAD -->
+    <div style="text-align:center; margin:20px 0 10px;">
+        <a href="#" class="btn-secondary" style="display:inline-block; padding:12px 36px; font-size:1rem;" onclick="alert('Whitepaper PDF coming soon. Stay tuned!')">
+            📄 Download Whitepaper (Coming Soon)
+        </a>
     </div>
 
     <!-- PRESALE BOX -->
