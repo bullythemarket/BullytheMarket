@@ -536,11 +536,14 @@
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
 
-        // Get stored end time, or set it if it doesn't exist
+        // Get stored end time
         let endTime = parseInt(localStorage.getItem(KEY), 10);
-        if (!endTime || isNaN(endTime)) {
-            // First visit – set end time to 14 days from now
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
+        const now = Date.now();
+        const fourteenDaysMs = 14 * 24 * 3600 * 1000;
+
+        // Validate: if no stored time, or it's in the past, or it's more than 15 days old, or less than 13 days old → reset
+        if (!endTime || isNaN(endTime) || endTime < now || (endTime - now) > fourteenDaysMs * 1.1 || (endTime - now) < thirteenDaysMs) {
+            endTime = now + fourteenDaysMs;
             localStorage.setItem(KEY, endTime.toString());
         }
 
