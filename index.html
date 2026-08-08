@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <style>
+        /* ... (styles remain the same, copy from previous version) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -397,7 +398,7 @@
         </div>
         <div class="roadmap-phase">
             <div class="phase-title">Phase 4</div>
-            <div class-phase-desc">CEX & Global Growth</div>
+            <div class="phase-desc">CEX & Global Growth</div>
             <ul>
                 <li>Tier-1 CEX listing (BitMart, MEXC)</li>
                 <li>$BTM launchpad — projects launch using $BTM</li>
@@ -531,14 +532,18 @@
         });
     }
 
-    // ---- HARD RESET COUNTDOWN (14 DAYS) ----
+    // ---- PERSISTENT COUNTDOWN (14 DAYS) ----
     (function persistentTimer() {
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
 
-        // HARD RESET: always set to 14 days from now
-        const endTime = Date.now() + 14 * 24 * 3600 * 1000;
-        localStorage.setItem(KEY, endTime.toString());
+        // Get stored end time, or set it if it doesn't exist
+        let endTime = parseInt(localStorage.getItem(KEY), 10);
+        if (!endTime || isNaN(endTime)) {
+            // First visit – set end time to 14 days from now
+            endTime = Date.now() + 14 * 24 * 3600 * 1000;
+            localStorage.setItem(KEY, endTime.toString());
+        }
 
         function updateDisplay() {
             const now = Date.now();
