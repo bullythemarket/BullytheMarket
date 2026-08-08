@@ -98,6 +98,11 @@
             color: #ffd700;
             white-space: nowrap;
         }
+        .header .wallet-status {
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-right: 12px;
+        }
         .hero {
             display: flex;
             flex-direction: column;
@@ -397,6 +402,7 @@
             .presale-box .address-row button { width: 100%; justify-content: center; }
             .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
             .header .badge { font-size: 0.6rem; padding: 4px 8px; }
+            .header { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
@@ -414,7 +420,10 @@
     <header class="header">
         <div class="logo"><span>$</span>BTM</div>
         <div class="badge">🔥 Presale Live</div>
-        <button id="connectBtn" class="btn-connect">🔗 Connect Wallet</button>
+        <div>
+            <span id="walletStatus" class="wallet-status">🔗 Not connected</span>
+            <button id="connectBtn" class="btn-connect">Connect Wallet</button>
+        </div>
     </header>
 
     <section class="hero">
@@ -528,11 +537,11 @@
         </div>
     </div>
 
-    <!-- WALLET CONNECT + REFERRAL SECTION -->
+    <!-- WALLET + REFERRAL SECTION -->
     <div class="wallet-section">
         <span>🔗 Wallet:</span>
-        <span id="walletStatus" style="color:#aaa;">Not connected</span>
-        <span id="walletAddress" class="address" style="display:none;"></span>
+        <span id="walletStatus2" style="color:#aaa;">Not connected</span>
+        <span id="walletAddressDisplay" class="address" style="display:none;"></span>
         <span id="referralLinkDisplay" style="color:#ffd700; font-size:0.85rem; display:none;"></span>
     </div>
 
@@ -690,11 +699,19 @@
     let signer, provider;
     let userAddress = null;
 
+    // ---- UPDATE UI ----
+    function updateUI(address) {
+        document.getElementById('walletStatus').textContent = '✅ Connected';
+        document.getElementById('walletStatus2').textContent = '✅ Connected';
+        document.getElementById('walletAddressDisplay').style.display = 'inline';
+        document.getElementById('walletAddressDisplay').textContent = address;
+        document.getElementById('connectBtn').textContent = '🔗 Connected';
+        document.getElementById('connectBtn').classList.add('btn-connect-connected');
+        generateReferralCode(address);
+    }
+
     // ---- WALLET CONNECT ----
     const connectBtn = document.getElementById('connectBtn');
-    const walletStatus = document.getElementById('walletStatus');
-    const walletAddress = document.getElementById('walletAddress');
-    const referralLinkDisplay = document.getElementById('referralLinkDisplay');
 
     connectBtn.addEventListener('click', async () => {
         if (typeof window.ethereum === 'undefined') {
@@ -706,12 +723,7 @@
             provider = new ethers.providers.Web3Provider(window.ethereum);
             signer = provider.getSigner();
             userAddress = await signer.getAddress();
-            walletStatus.textContent = '✅ Connected';
-            walletAddress.style.display = 'inline';
-            walletAddress.textContent = userAddress;
-            connectBtn.textContent = '🔗 Connected';
-            connectBtn.classList.add('btn-connect-connected');
-            await generateReferralCode();
+            updateUI(userAddress);
         } catch (error) {
             console.error(error);
             alert('Connection failed.');
@@ -719,15 +731,15 @@
     });
 
     // ---- GENERATE REFERRAL CODE ----
-    async function generateReferralCode() {
-        if (!userAddress) return;
-        const code = userAddress.slice(2, 8).toUpperCase();
+    async function generateReferralCode(address) {
+        if (!address) return;
+        const code = address.slice(2, 8).toUpperCase();
         const linkEl = document.getElementById('referralLink');
         const baseUrl = window.location.origin + window.location.pathname;
         linkEl.textContent = `${baseUrl}?ref=${code}`;
         linkEl.dataset.code = code;
-        referralLinkDisplay.style.display = 'inline';
-        referralLinkDisplay.textContent = `🔗 ${baseUrl}?ref=${code}`;
+        document.getElementById('referralLinkDisplay').style.display = 'inline';
+        document.getElementById('referralLinkDisplay').textContent = `🔗 ${baseUrl}?ref=${code}`;
 
         try {
             const contract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
