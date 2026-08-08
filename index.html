@@ -397,7 +397,7 @@
         </div>
         <div class="roadmap-phase">
             <div class="phase-title">Phase 4</div>
-            <div class="phase-desc">CEX & Global Growth</div>
+            <div class-phase-desc">CEX & Global Growth</div>
             <ul>
                 <li>Tier-1 CEX listing (BitMart, MEXC)</li>
                 <li>$BTM launchpad — projects launch using $BTM</li>
@@ -531,18 +531,14 @@
         });
     }
 
-    // ---- SIMPLE PERSISTENT COUNTDOWN (14 DAYS) ----
+    // ---- HARD RESET COUNTDOWN (14 DAYS) ----
     (function persistentTimer() {
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
 
-        // Get stored end time, or set it if it doesn't exist
-        let endTime = parseInt(localStorage.getItem(KEY), 10);
-        if (!endTime || isNaN(endTime)) {
-            // First visit – set end time to 14 days from now
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
-            localStorage.setItem(KEY, endTime.toString());
-        }
+        // HARD RESET: always set to 14 days from now
+        const endTime = Date.now() + 14 * 24 * 3600 * 1000;
+        localStorage.setItem(KEY, endTime.toString());
 
         function updateDisplay() {
             const now = Date.now();
