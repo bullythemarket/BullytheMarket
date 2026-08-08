@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
+        /* ... (all styles remain the same as the restored version) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -698,82 +699,47 @@
         });
     }
 
-    // ---- CONFIG ----
-    const PRESALE_ADDRESS = "0x..."; // Replace with your presale contract address
-    const PRESALE_ABI = [
-        "function buyTokens(string memory referralCode) payable",
-        "function generateReferralCode(string memory code)",
-        "function getReferrer(string memory code) view returns (address)",
-        "function referrerOfCode(string memory) view returns (address)"
-    ];
+    // ---- SIMPLE WALLET CONNECT (FIXED) ----
+    document.addEventListener('DOMContentLoaded', function() {
+        const connectBtn = document.getElementById('connectBtn');
+        console.log('Connect button found:', connectBtn);
 
-    let signer, provider;
-    let userAddress = null;
-
-    // ---- UPDATE UI ----
-    function updateUI(address) {
-        document.getElementById('walletStatus').textContent = '✅ Connected';
-        document.getElementById('walletStatus2').textContent = '✅ Connected';
-        document.getElementById('walletAddressDisplay').style.display = 'inline';
-        document.getElementById('walletAddressDisplay').textContent = address;
-        document.getElementById('connectBtn').textContent = '🔗 Connected';
-        document.getElementById('connectBtn').classList.add('btn-connect-connected');
-        generateReferralCode(address);
-    }
-
-    // ---- WALLET CONNECT ----
-    document.getElementById('connectBtn').addEventListener('click', async function() {
-        console.log('Connect button clicked');
-        if (typeof window.ethereum === 'undefined') {
-            alert('Please install MetaMask!');
-            console.log('MetaMask not installed');
-            return;
-        }
-        try {
-            console.log('Requesting accounts...');
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            console.log('Accounts requested successfully');
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            console.log('Provider created');
-            signer = provider.getSigner();
-            console.log('Signer created');
-            userAddress = await signer.getAddress();
-            console.log('User address:', userAddress);
-            updateUI(userAddress);
-        } catch (error) {
-            console.error('Connection error:', error);
-            alert('Connection failed. Please try again.');
-        }
+        connectBtn.addEventListener('click', function() {
+            console.log('Connect button clicked');
+            if (typeof window.ethereum === 'undefined') {
+                alert('Please install MetaMask!');
+                return;
+            }
+            window.ethereum.request({ method: 'eth_requestAccounts' })
+                .then(accounts => {
+                    console.log('Accounts connected:', accounts);
+                    document.getElementById('walletStatus').textContent = '✅ Connected';
+                    document.getElementById('connectBtn').textContent = '🔗 Connected';
+                    document.getElementById('connectBtn').classList.add('btn-connect-connected');
+                    const address = accounts[0];
+                    document.getElementById('walletStatus2').textContent = '✅ Connected';
+                    document.getElementById('walletAddressDisplay').style.display = 'inline';
+                    document.getElementById('walletAddressDisplay').textContent = address;
+                    // Generate referral link
+                    generateReferralCode(address);
+                })
+                .catch(error => {
+                    console.error('Connection error:', error);
+                    alert('Connection failed: ' + error.message);
+                });
+        });
     });
 
     // ---- GENERATE REFERRAL CODE ----
-    async function generateReferralCode(address) {
-        if (!address) {
-            console.log('No address provided');
-            return;
-        }
+    function generateReferralCode(address) {
+        if (!address) return;
         const code = address.slice(2, 8).toUpperCase();
         const baseUrl = window.location.origin + window.location.pathname;
         const link = `${baseUrl}?ref=${code}`;
-        console.log('Generated link:', link);
         document.getElementById('referralLink').textContent = link;
         document.getElementById('referralLinkDisplay').style.display = 'inline';
         document.getElementById('referralLinkDisplay').textContent = `🔗 ${link}`;
         document.getElementById('referralStatus').textContent = '✅ Referral link generated!';
-
-        try {
-            const contract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
-            const existingReferrer = await contract.referrerOfCode(code);
-            if (existingReferrer === ethers.constants.AddressZero) {
-                await contract.generateReferralCode(code);
-                document.getElementById('referralStatus').textContent = '✅ Referral code registered on-chain!';
-            } else {
-                document.getElementById('referralStatus').textContent = '✅ Referral code already active.';
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            document.getElementById('referralStatus').textContent = '⚠️ Code generated but not registered on-chain.';
-        }
     }
 
     // ---- COPY REFERRAL LINK ----
@@ -797,15 +763,9 @@
             localStorage.setItem('btm_referral_applied', code);
             document.getElementById('referralCodeStatus').textContent = `✅ Referral code "${code}" applied! You get 10% bonus.`;
             document.getElementById('referralCodeStatus').style.color = '#ffd700';
-            input.classList.add('success');
-            input.classList.remove('error');
-            setTimeout(() => { input.classList.remove('success'); }, 3000);
         } else {
             document.getElementById('referralCodeStatus').textContent = '❌ Please enter a valid code (4+ characters).';
             document.getElementById('referralCodeStatus').style.color = '#ff6666';
-            input.classList.add('error');
-            input.classList.remove('success');
-            setTimeout(() => { input.classList.remove('error'); }, 3000);
         }
     }
 
@@ -823,16 +783,9 @@
 
     // ---- BUY TOKENS ----
     document.getElementById('buyBtn').addEventListener('click', async function() {
-        let signer = provider ? provider.getSigner() : null;
-        if (!signer) {
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-            } catch (error) {
-                alert('Please connect your wallet to buy.');
-                return;
-            }
+        if (typeof window.ethereum === 'undefined') {
+            alert('Please install MetaMask!');
+            return;
         }
         const amount = document.getElementById('bnbAmount').value;
         if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
@@ -841,9 +794,13 @@
         }
         const referralCode = localStorage.getItem('btm_referral_applied') || '';
         const buyStatus = document.getElementById('buyStatus');
-        buyStatus.textContent = '⏳ Sending transaction...';
+        buyStatus.textContent = '⏳ Connecting wallet...';
         try {
+            await window.ethereum.request({ method: 'eth_requestAccounts' });
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
             const contract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
+            buyStatus.textContent = '⏳ Sending transaction...';
             const tx = await contract.buyTokens(referralCode, {
                 value: ethers.utils.parseEther(amount)
             });
