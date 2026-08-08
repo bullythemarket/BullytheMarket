@@ -292,10 +292,17 @@
             border-radius: 40px;
             width: 200px;
             margin: 8px 0;
+            transition: border-color 0.3s ease;
         }
         .referral-section input:focus {
             outline: none;
             border-color: #ffd700;
+        }
+        .referral-section input.success {
+            border-color: #ffd700;
+        }
+        .referral-section input.error {
+            border-color: #ff6666;
         }
         .burn-tracker {
             background: rgba(255,255,255,0.03);
@@ -310,6 +317,14 @@
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255,215,0,0.15);
+        }
+        .farming-section {
+            background: rgba(255,215,0,0.05);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,215,0,0.2);
+            text-align: center;
         }
         .footer {
             border-top: 1px solid #222;
@@ -345,7 +360,8 @@
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
-            .referral-section input { width: 100%; }
+            .referral-section input { width: 100%; max-width: 250px; }
+            .referral-section .btn-primary { width: 100%; max-width: 250px; margin: 4px 0; }
         }
     </style>
 </head>
@@ -477,15 +493,15 @@
         <p style="color:#aaa; font-size:0.95rem;">Share your referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
         <code id="referralLink" style="background:#1a1a1a; padding:8px 16px; border-radius:8px; display:inline-block; color:#ffd700; word-break:break-all; font-size:0.9rem; cursor:pointer;">https://bullythemarket.github.io/BullytheMarket/?ref=YOUR_CODE</code>
-        <div style="margin-top:12px;">
+        <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
             <input type="text" id="referralCode" placeholder="Enter referral code" />
-            <button onclick="applyReferral()" class="btn-primary" style="padding:10px 24px; font-size:0.9rem; margin-left:8px;">Apply</button>
+            <button onclick="applyReferral()" class="btn-primary" style="padding:10px 24px; font-size:0.9rem;">Apply</button>
         </div>
-        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+        <p id="referralStatus" style="margin-top:12px; color:#888; font-size:0.95rem; min-height:24px;"></p>
     </div>
 
     <!-- FARMING / YIELD BOOSTS -->
-    <div style="background: rgba(255,215,0,0.05); border-radius: 20px; padding: 24px 20px; margin: 20px 0; border: 1px solid rgba(255,215,0,0.2); text-align: center;">
+    <div class="farming-section">
         <h3 style="color:#ffd700;">🌾 Farming & Yield Boosts</h3>
         <p style="color:#ccc; font-size:1rem;">LP providers will receive <strong style="color:#ffd700;">2x rewards</strong> for the first 30 days after launch.</p>
         <p style="color:#888; font-size:0.9rem;">Stake your LP tokens and earn extra $BTM.</p>
@@ -606,6 +622,7 @@
         const inputEl = document.getElementById('referralCode');
         const statusEl = document.getElementById('referralStatus');
 
+        // Generate a random referral code if not already set
         function generateReferralCode() {
             let code = localStorage.getItem('btm_referral_code');
             if (!code) {
@@ -620,11 +637,13 @@
             return code;
         }
 
+        // Get the referral code from URL (if someone used a referral link)
         function getReferralFromURL() {
             const params = new URLSearchParams(window.location.search);
             return params.get('ref');
         }
 
+        // Update the referral link displayed on the page
         function updateReferralLink() {
             const code = generateReferralCode();
             const baseUrl = 'https://bullythemarket.github.io/BullytheMarket/';
@@ -632,27 +651,53 @@
             linkEl.textContent = fullLink;
             linkEl.style.cursor = 'pointer';
             linkEl.onclick = function() {
-                navigator.clipboard.writeText(fullLink);
-                statusEl.textContent = '✅ Referral link copied!';
-                statusEl.style.color = '#ffd700';
-                setTimeout(() => {
-                    statusEl.textContent = '';
-                }, 3000);
+                navigator.clipboard.writeText(fullLink).then(() => {
+                    statusEl.textContent = '✅ Referral link copied!';
+                    statusEl.style.color = '#ffd700';
+                    setTimeout(() => {
+                        statusEl.textContent = '';
+                    }, 3000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = fullLink;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    statusEl.textContent = '✅ Referral link copied!';
+                    statusEl.style.color = '#ffd700';
+                    setTimeout(() => {
+                        statusEl.textContent = '';
+                    }, 3000);
+                });
             };
         }
 
+        // Apply referral code from URL or user input
         function applyReferralCode(code) {
-            if (code) {
+            if (code && code.length >= 4) {
                 localStorage.setItem('btm_referral_applied', code);
                 statusEl.textContent = `✅ Referral code "${code}" applied! You will get 5% bonus tokens.`;
                 statusEl.style.color = '#ffd700';
                 inputEl.value = code;
+                inputEl.classList.add('success');
+                inputEl.classList.remove('error');
+                setTimeout(() => {
+                    inputEl.classList.remove('success');
+                }, 3000);
             } else {
-                statusEl.textContent = '❌ Please enter a valid referral code.';
+                statusEl.textContent = '❌ Please enter a valid referral code (at least 4 characters).';
                 statusEl.style.color = '#ff6666';
+                inputEl.classList.add('error');
+                inputEl.classList.remove('success');
+                setTimeout(() => {
+                    inputEl.classList.remove('error');
+                }, 3000);
             }
         }
 
+        // Check URL for referral code on page load
         function checkURLForReferral() {
             const ref = getReferralFromURL();
             if (ref) {
@@ -660,16 +705,23 @@
             }
         }
 
+        // Handle user input (exposed globally)
         window.applyReferral = function() {
             const code = inputEl.value.trim().toUpperCase();
             if (code) {
                 applyReferralCode(code);
             } else {
-                statusEl.textContent = '❌ Please enter a valid referral code.';
+                statusEl.textContent = '❌ Please enter a referral code.';
                 statusEl.style.color = '#ff6666';
+                inputEl.classList.add('error');
+                inputEl.classList.remove('success');
+                setTimeout(() => {
+                    inputEl.classList.remove('error');
+                }, 3000);
             }
         };
 
+        // Auto-detect referral from URL on first visit
         checkURLForReferral();
         updateReferralLink();
     })();
