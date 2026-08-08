@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <style>
-        /* ... (styles remain exactly the same, copy from previous version) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -277,6 +276,41 @@
             color: #888;
             margin: 12px 0;
         }
+        .referral-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin: 30px 0;
+            border: 1px solid rgba(255,215,0,0.15);
+            text-align: center;
+        }
+        .referral-section input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 40px;
+            width: 200px;
+            margin: 8px 0;
+        }
+        .referral-section input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .burn-tracker {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,215,0,0.15);
+            text-align: center;
+        }
+        .price-widget {
+            margin: 30px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,215,0,0.15);
+        }
         .footer {
             border-top: 1px solid #222;
             padding: 24px 0;
@@ -311,6 +345,7 @@
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
+            .referral-section input { width: 100%; }
         }
     </style>
 </head>
@@ -339,6 +374,17 @@
         </div>
     </section>
 
+    <!-- PRICE WIDGET -->
+    <div class="price-widget">
+        <iframe
+            src="https://dexscreener.com/bsc/0x...?embed=1&theme=dark"
+            width="100%"
+            height="400"
+            style="border: none; border-radius: 12px;"
+            title="$BTM Price Chart"
+        ></iframe>
+    </div>
+
     <section class="story">
         <div class="story-text">
             <h2><span class="gold-text">The</span> Rebellion</h2>
@@ -361,7 +407,14 @@
         <div class="token-card"><div class="number">✅</div><div class="label">CertiK Audit</div></div>
     </div>
 
-    <!-- EXPANDED ROADMAP -->
+    <!-- BURN TRACKER -->
+    <div class="burn-tracker">
+        <h3 style="font-size:1.4rem; color:#ffd700;">🔥 Total Burned</h3>
+        <p id="burnAmount" style="font-size:2rem; font-weight:700; color:#fff;">Loading...</p>
+        <p style="color:#888; font-size:0.9rem;">Tokens burned permanently from supply</p>
+    </div>
+
+    <!-- ROADMAP -->
     <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
         <span class="gold-text">Roadmap</span> to Dominance
     </h2>
@@ -418,11 +471,25 @@
         </div>
     </div>
 
-    <!-- WHITEPAPER DOWNLOAD -->
-    <div style="text-align:center; margin:20px 0 10px;">
-        <a href="#" class="btn-secondary" style="display:inline-block; padding:12px 36px; font-size:1rem;" onclick="alert('Whitepaper PDF coming soon. Stay tuned!')">
-            📄 Download Whitepaper (Coming Soon)
-        </a>
+    <!-- REFERRAL PROGRAM -->
+    <div class="referral-section">
+        <h3 style="color:#ffd700;">🚀 Referral Program</h3>
+        <p style="color:#aaa; font-size:0.95rem;">Share your referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
+        <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
+        <code id="referralLink" style="background:#1a1a1a; padding:8px 16px; border-radius:8px; display:inline-block; color:#ffd700; word-break:break-all; font-size:0.9rem;">https://slopeydude.github.io/btm-presale/?ref=YOUR_CODE</code>
+        <div style="margin-top:12px;">
+            <input type="text" id="referralCode" placeholder="Enter referral code" />
+            <button onclick="applyReferral()" class="btn-primary" style="padding:10px 24px; font-size:0.9rem; margin-left:8px;">Apply</button>
+        </div>
+        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+    </div>
+
+    <!-- FARMING / YIELD BOOSTS -->
+    <div style="background: rgba(255,215,0,0.05); border-radius: 20px; padding: 24px 20px; margin: 20px 0; border: 1px solid rgba(255,215,0,0.2); text-align: center;">
+        <h3 style="color:#ffd700;">🌾 Farming & Yield Boosts</h3>
+        <p style="color:#ccc; font-size:1rem;">LP providers will receive <strong style="color:#ffd700;">2x rewards</strong> for the first 30 days after launch.</p>
+        <p style="color:#888; font-size:0.9rem;">Stake your LP tokens and earn extra $BTM.</p>
+        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Coming soon after PancakeSwap launch.</p>
     </div>
 
     <!-- PRESALE BOX -->
@@ -532,15 +599,34 @@
         });
     }
 
+    // REFERRAL PROGRAM
+    function applyReferral() {
+        const code = document.getElementById('referralCode').value.trim();
+        if (code) {
+            localStorage.setItem('btm_referral', code);
+            document.getElementById('referralStatus').innerText = '✅ Referral code applied! You will receive 5% bonus tokens.';
+            document.getElementById('referralStatus').style.color = '#ffd700';
+        } else {
+            document.getElementById('referralStatus').innerText = '❌ Please enter a valid referral code.';
+            document.getElementById('referralStatus').style.color = '#ff6666';
+        }
+    }
+
+    // BURN TRACKER
+    async function fetchBurnData() {
+        // Placeholder — replace with actual Web3 call after deployment
+        // In production, use ethers.js or web3.js to fetch balance of dead address
+        document.getElementById('burnAmount').innerText = '1,234,567 $BTM';
+    }
+    fetchBurnData();
+
     // ---- PERSISTENT COUNTDOWN (14 DAYS) ----
     (function persistentTimer() {
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
 
-        // Get stored end time, or set it if it doesn't exist
         let endTime = parseInt(localStorage.getItem(KEY), 10);
         if (!endTime || isNaN(endTime)) {
-            // First visit – set end time to 14 days from now
             endTime = Date.now() + 14 * 24 * 3600 * 1000;
             localStorage.setItem(KEY, endTime.toString());
         }
