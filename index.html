@@ -426,9 +426,6 @@
     <header class="header">
         <div class="logo"><span>$</span>BTM</div>
         <div class="badge">🔥 Presale Live</div>
-        <div>
-            <span id="walletStatus" class="wallet-status">🔗 Not connected</span>
-        </div>
     </header>
 
     <section class="hero">
@@ -555,7 +552,7 @@
         <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
         <p style="color:#aaa; font-size:0.95rem;">Connect your wallet to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <button id="connectBtn" class="btn-connect">Connect to Generate Referral</button>
+            <button id="connectBtn" class="btn-connect">Connect Wallet to Generate</button>
         </div>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
         <div id="referralLink" class="referral-link-display">Connect wallet to generate</div>
@@ -695,7 +692,7 @@
         });
     }
 
-    // ---- SIMPLE WALLET CONNECT (FIXED) ----
+    // ---- WALLET CONNECT ----
     document.addEventListener('DOMContentLoaded', function() {
         const connectBtn = document.getElementById('connectBtn');
         console.log('Connect button found:', connectBtn);
@@ -709,11 +706,10 @@
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(accounts => {
                     console.log('Accounts connected:', accounts);
-                    document.getElementById('walletStatus').textContent = '✅ Connected';
-                    document.getElementById('walletStatus2').textContent = '✅ Connected';
-                    document.getElementById('connectBtn').textContent = '🔗 Connected';
+                    document.getElementById('connectBtn').textContent = '✅ Connected';
                     document.getElementById('connectBtn').classList.add('btn-connect-connected');
                     const address = accounts[0];
+                    document.getElementById('walletStatus2').textContent = '✅ Connected';
                     document.getElementById('walletAddressDisplay').style.display = 'inline';
                     document.getElementById('walletAddressDisplay').textContent = address;
                     generateReferralCode(address);
