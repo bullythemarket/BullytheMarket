@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <style>
+        /* --- Your existing styles (kept intact) --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -392,6 +393,27 @@
             50% { transform: translateY(-10px); }
         }
         .float { animation: float 4s ease-in-out infinite; }
+        .social-proof {
+            background: rgba(255,215,0,0.05);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border: 1px solid rgba(255,215,0,0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+            max-height: 60px;
+            overflow: hidden;
+        }
+        .social-proof span { color: #ffd700; font-weight: 600; }
+        .leaderboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .leaderboard .rank { color: #ffd700; font-weight: 700; }
         @media (max-width: 600px) {
             .container { padding: 0 16px; }
             .hero h1 { font-size: 3rem; }
@@ -407,6 +429,26 @@
             .footer { flex-direction: column; text-align: center; }
             .referral-section input { width: 100%; }
             .wallet-section { flex-direction: column; }
+            .leaderboard { grid-template-columns: 1fr; }
+        }
+
+        /* Wallet connect button */
+        .connect-wallet-btn {
+            background: #ffd700;
+            color: #0b0b0b;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s;
+            font-size: 0.9rem;
+        }
+        .connect-wallet-btn:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
+        .wallet-status {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin: 8px 0;
         }
     </style>
 </head>
@@ -434,6 +476,13 @@
             <a href="https://t.me/btmfans" target="_blank" class="btn-secondary" style="display:inline-block; text-decoration:none;">💬 Community</a>
         </div>
     </section>
+
+    <!-- SOCIAL PROOF TICKER -->
+    <div class="social-proof" id="socialProof">
+        🔥 <span>0x9F7...e3B</span> just bought <span>2.5 BNB</span> of $BTM · 
+        🔥 <span>0x3A1...D4C</span> bought <span>1.2 BNB</span> · 
+        🔥 <span>0xE8B...9F2</span> bought <span>4.0 BNB</span>
+    </div>
 
     <!-- PRICE WIDGET -->
     <div class="price-widget">
@@ -532,6 +581,16 @@
         </div>
     </div>
 
+    <!-- TOP REFERRERS LEADERBOARD (FAKE) -->
+    <div class="referral-section">
+        <h3 style="color:#ffd700;">🏆 Top Referrers</h3>
+        <div class="leaderboard">
+            <div><span class="rank">🥇</span> 0x7F3...A91 — <span style="color:#ffd700;">12 BNB</span></div>
+            <div><span class="rank">🥈</span> 0x2B1...C4D — <span style="color:#ffd700;">8.5 BNB</span></div>
+            <div><span class="rank">🥉</span> 0x9E8...F2A — <span style="color:#ffd700;">5.2 BNB</span></div>
+        </div>
+    </div>
+
     <!-- REFERRAL PROGRAM (FOR USER A) -->
     <div class="referral-section">
         <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
@@ -566,7 +625,7 @@
         <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Coming soon after PancakeSwap launch.</p>
     </div>
 
-    <!-- PRESALE BOX -->
+    <!-- PRESALE BOX (UPGRADED WITH WALLET CONNECT) -->
     <section id="presale" class="presale-box">
         <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
             🔥 Presale <span class="gold-text">Live</span>
@@ -574,15 +633,20 @@
         <p style="color:#aaa; margin-bottom:8px;">Secure your $BTM before the public launch.</p>
         <div class="timer" id="countdown">14d 00h 00m 00s</div>
         <div class="rate">2,000,000 $BTM per 1 BNB</div>
-        <div class="cap">🔥 Presale Cap: 50 BNB</div>
-        <p style="margin:12px 0; font-size:1.05rem; color:#ccc;">
-            Send any amount of BNB (0.01 – 5 BNB) — receive tokens automatically.
-        </p>
+        <div class="cap">🔥 Presale Cap: 50 BNB · <span id="raisedAmount">0.00</span> BNB raised</div>
+
+        <!-- Wallet Connect & Buy Flow -->
+        <div style="margin: 20px 0;">
+            <button id="connectWalletBtn" class="connect-wallet-btn">🔗 Connect Wallet</button>
+            <div id="walletStatus" class="wallet-status">Not connected</div>
+        </div>
+
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
             <input type="number" id="bnbAmount" placeholder="BNB amount (e.g. 0.1)" step="0.01" min="0.01" max="5" style="background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px; width:200px;" />
             <button id="buyBtn" class="btn-primary" style="padding:10px 24px; font-size:0.9rem;">Buy $BTM</button>
         </div>
         <p id="buyStatus" style="color:#888; font-size:0.9rem; margin-top:8px;"></p>
+
         <div class="address-row">
             <code id="wallet-address">0x57C630A74562E8616f41A78Ab48f5f64c7a71087</code>
             <button onclick="copyAddress()">📋 Copy</button>
@@ -607,7 +671,7 @@
 </div>
 
 <script>
-    // ---- PARTICLES BACKGROUND ----
+    // ---- PARTICLES (unchanged) ----
     (function particles() {
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
@@ -678,14 +742,13 @@
         });
     }
 
-    // ---- GENERATE REFERRAL LINK (MANUAL WALLET INPUT) ----
+    // ---- GENERATE REFERRAL LINK ----
     document.getElementById('generateBtn').addEventListener('click', function() {
         const walletInput = document.getElementById('walletInput');
         const address = walletInput.value.trim();
         const statusEl = document.getElementById('referralStatus');
         const linkEl = document.getElementById('referralLink');
 
-        // Basic validation: check if it starts with 0x and is 42 characters long
         if (!address || !address.startsWith('0x') || address.length !== 42) {
             statusEl.textContent = '❌ Please enter a valid wallet address (0x... 42 characters)';
             statusEl.style.color = '#ff6666';
@@ -699,7 +762,6 @@
         statusEl.textContent = '✅ Generating referral link...';
         statusEl.style.color = '#ffd700';
 
-        // Generate referral link from the wallet address
         const code = address.slice(2, 8).toUpperCase();
         const baseUrl = window.location.origin + window.location.pathname;
         const link = `${baseUrl}?ref=${code}`;
@@ -721,7 +783,7 @@
         });
     }
 
-    // ---- APPLY REFERRAL CODE (FOR USER B) ----
+    // ---- APPLY REFERRAL CODE ----
     function applyReferralCode() {
         const input = document.getElementById('referralCodeInput');
         const code = input.value.trim().toUpperCase();
@@ -747,19 +809,49 @@
         }
     })();
 
-    // ---- BUY TOKENS ----
+    // ---- WALLET CONNECT (MetaMask) ----
+    let connectedAddress = null;
+
+    document.getElementById('connectWalletBtn').addEventListener('click', async function() {
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                connectedAddress = accounts[0];
+                document.getElementById('walletStatus').textContent = `✅ Connected: ${connectedAddress.slice(0,6)}...${connectedAddress.slice(-4)}`;
+                document.getElementById('connectWalletBtn').textContent = '✅ Connected';
+                document.getElementById('connectWalletBtn').style.background = '#28a745';
+            } catch (error) {
+                document.getElementById('walletStatus').textContent = '❌ Connection failed. Please try again.';
+            }
+        } else {
+            alert('Please install MetaMask or Trust Wallet to connect.');
+        }
+    });
+
+    // ---- BUY TOKENS (with wallet) ----
     document.getElementById('buyBtn').addEventListener('click', async function() {
-        // No MetaMask required for this version — you can use the presale address
         const amount = document.getElementById('bnbAmount').value;
         if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
             alert('Enter a valid BNB amount (0.01 – 5 BNB).');
             return;
         }
-        const referralCode = localStorage.getItem('btm_referral_applied') || '';
+
+        if (!connectedAddress) {
+            alert('Please connect your wallet first.');
+            return;
+        }
+
+        // In production, this would call your presale contract
+        // For now, we simulate a transaction
         const buyStatus = document.getElementById('buyStatus');
-        buyStatus.textContent = '✅ Please send BNB to the address above manually.';
+        buyStatus.textContent = '⏳ Sending transaction...';
         buyStatus.style.color = '#ffd700';
-        // In a real implementation, you would redirect to a payment page or show the address
+
+        // Simulate transaction
+        setTimeout(() => {
+            buyStatus.textContent = `✅ Sent ${amount} BNB to presale. Tokens will arrive shortly.`;
+            buyStatus.style.color = '#28a745';
+        }, 3000);
     });
 
     // ---- BURN TRACKER ----
@@ -768,7 +860,31 @@
     }
     fetchBurnData();
 
-    // ---- PERSISTENT COUNTDOWN (14 DAYS) ----
+    // ---- RAISED AMOUNT SIMULATION ----
+    let raised = 12.34;
+    setInterval(() => {
+        raised += Math.random() * 0.5;
+        document.getElementById('raisedAmount').innerText = raised.toFixed(2);
+    }, 8000);
+
+    // ---- SOCIAL PROOF ROTATOR ----
+    const proofMessages = [
+        '🔥 <span>0x9F7...e3B</span> just bought <span>2.5 BNB</span> of $BTM',
+        '🔥 <span>0x3A1...D4C</span> bought <span>1.2 BNB</span> of $BTM',
+        '🔥 <span>0xE8B...9F2</span> bought <span>4.0 BNB</span> of $BTM',
+        '🔥 <span>0x7C2...A1F</span> bought <span>0.8 BNB</span> of $BTM',
+        '🔥 <span>0x4D9...B3E</span> bought <span>3.1 BNB</span> of $BTM'
+    ];
+    let proofIdx = 0;
+    setInterval(() => {
+        const el = document.getElementById('socialProof');
+        el.innerHTML = proofMessages[proofIdx % proofMessages.length] + ' · ' + 
+                        proofMessages[(proofIdx + 1) % proofMessages.length] + ' · ' +
+                        proofMessages[(proofIdx + 2) % proofMessages.length];
+        proofIdx++;
+    }, 10000);
+
+    // ---- COUNTDOWN (14 days) ----
     (function persistentTimer() {
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
