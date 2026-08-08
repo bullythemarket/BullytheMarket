@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -57,7 +56,7 @@
             text-align: center;
         }
         .btn-secondary:hover { background: rgba(255,215,0,0.15); border-color: #ffd700; }
-        .btn-connect {
+        .btn-generate {
             display: inline-block;
             background: #ffd700;
             color: #0b0b0b;
@@ -69,14 +68,7 @@
             cursor: pointer;
             transition: 0.25s;
         }
-        .btn-connect:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
-        .btn-connect-connected {
-            background: #2a2a2a;
-            color: #ffd700;
-            border: 1px solid #ffd70066;
-            cursor: default;
-        }
-        .btn-connect-connected:hover { transform: none; box-shadow: none; }
+        .btn-generate:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
         .header {
             display: flex;
             justify-content: space-between;
@@ -311,7 +303,8 @@
             color: #fff;
             padding: 10px 16px;
             border-radius: 40px;
-            width: 200px;
+            width: 100%;
+            max-width: 400px;
             margin: 8px 0;
             transition: border-color 0.3s ease;
         }
@@ -539,23 +532,16 @@
         </div>
     </div>
 
-    <!-- WALLET SECTION -->
-    <div class="wallet-section">
-        <span>🔗 Wallet:</span>
-        <span id="walletStatus2" style="color:#aaa;">Not connected</span>
-        <span id="walletAddressDisplay" class="address" style="display:none;"></span>
-        <span id="referralLinkDisplay" style="color:#ffd700; font-size:0.85rem; display:none;"></span>
-    </div>
-
     <!-- REFERRAL PROGRAM (FOR USER A) -->
     <div class="referral-section">
         <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
-        <p style="color:#aaa; font-size:0.95rem;">Connect your wallet to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
+        <p style="color:#aaa; font-size:0.95rem;">Enter your wallet address to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <button id="connectBtn" class="btn-connect">Connect Wallet to Generate</button>
+            <input type="text" id="walletInput" placeholder="Enter your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
+            <button id="generateBtn" class="btn-generate">Generate Referral Link</button>
         </div>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
-        <div id="referralLink" class="referral-link-display">Connect wallet to generate</div>
+        <div id="referralLink" class="referral-link-display">Enter wallet address above</div>
         <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
             <button onclick="copyReferralLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">📋 Copy Link</button>
         </div>
@@ -692,52 +678,41 @@
         });
     }
 
-    // ---- WALLET CONNECT ----
-    document.addEventListener('DOMContentLoaded', function() {
-        const connectBtn = document.getElementById('connectBtn');
-        console.log('Connect button found:', connectBtn);
+    // ---- GENERATE REFERRAL LINK (MANUAL WALLET INPUT) ----
+    document.getElementById('generateBtn').addEventListener('click', function() {
+        const walletInput = document.getElementById('walletInput');
+        const address = walletInput.value.trim();
+        const statusEl = document.getElementById('referralStatus');
+        const linkEl = document.getElementById('referralLink');
 
-        connectBtn.addEventListener('click', function() {
-            console.log('Connect button clicked');
-            if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask!');
-                return;
-            }
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(accounts => {
-                    console.log('Accounts connected:', accounts);
-                    document.getElementById('connectBtn').textContent = '✅ Connected';
-                    document.getElementById('connectBtn').classList.add('btn-connect-connected');
-                    const address = accounts[0];
-                    document.getElementById('walletStatus2').textContent = '✅ Connected';
-                    document.getElementById('walletAddressDisplay').style.display = 'inline';
-                    document.getElementById('walletAddressDisplay').textContent = address;
-                    generateReferralCode(address);
-                })
-                .catch(error => {
-                    console.error('Connection error:', error);
-                    alert('Connection failed: ' + error.message);
-                });
-        });
-    });
+        // Basic validation: check if it starts with 0x and is 42 characters long
+        if (!address || !address.startsWith('0x') || address.length !== 42) {
+            statusEl.textContent = '❌ Please enter a valid wallet address (0x... 42 characters)';
+            statusEl.style.color = '#ff6666';
+            walletInput.classList.add('error');
+            walletInput.classList.remove('success');
+            return;
+        }
 
-    // ---- GENERATE REFERRAL CODE ----
-    function generateReferralCode(address) {
-        if (!address) return;
+        walletInput.classList.remove('error');
+        walletInput.classList.add('success');
+        statusEl.textContent = '✅ Generating referral link...';
+        statusEl.style.color = '#ffd700';
+
+        // Generate referral link from the wallet address
         const code = address.slice(2, 8).toUpperCase();
         const baseUrl = window.location.origin + window.location.pathname;
         const link = `${baseUrl}?ref=${code}`;
-        document.getElementById('referralLink').textContent = link;
-        document.getElementById('referralLinkDisplay').style.display = 'inline';
-        document.getElementById('referralLinkDisplay').textContent = `🔗 ${link}`;
-        document.getElementById('referralStatus').textContent = '✅ Referral link generated!';
-    }
+        linkEl.textContent = link;
+        statusEl.textContent = '✅ Referral link generated! Share it to earn 5% bonus!';
+        statusEl.style.color = '#ffd700';
+    });
 
     // ---- COPY REFERRAL LINK ----
     function copyReferralLink() {
         const link = document.getElementById('referralLink').textContent;
-        if (link === 'Connect wallet to generate') {
-            alert('Please connect your wallet first.');
+        if (link === 'Enter wallet address above') {
+            alert('Please generate a referral link first.');
             return;
         }
         navigator.clipboard.writeText(link).then(() => {
@@ -746,7 +721,7 @@
         });
     }
 
-    // ---- APPLY REFERRAL CODE ----
+    // ---- APPLY REFERRAL CODE (FOR USER B) ----
     function applyReferralCode() {
         const input = document.getElementById('referralCodeInput');
         const code = input.value.trim().toUpperCase();
@@ -774,10 +749,7 @@
 
     // ---- BUY TOKENS ----
     document.getElementById('buyBtn').addEventListener('click', async function() {
-        if (typeof window.ethereum === 'undefined') {
-            alert('Please install MetaMask!');
-            return;
-        }
+        // No MetaMask required for this version — you can use the presale address
         const amount = document.getElementById('bnbAmount').value;
         if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
             alert('Enter a valid BNB amount (0.01 – 5 BNB).');
@@ -785,24 +757,9 @@
         }
         const referralCode = localStorage.getItem('btm_referral_applied') || '';
         const buyStatus = document.getElementById('buyStatus');
-        buyStatus.textContent = '⏳ Connecting wallet...';
-        try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const contract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
-            buyStatus.textContent = '⏳ Sending transaction...';
-            const tx = await contract.buyTokens(referralCode, {
-                value: ethers.utils.parseEther(amount)
-            });
-            await tx.wait();
-            buyStatus.textContent = '✅ Tokens purchased! You received 10% bonus.';
-            buyStatus.style.color = '#ffd700';
-        } catch (error) {
-            console.error(error);
-            buyStatus.textContent = '❌ Transaction failed. Check console for details.';
-            buyStatus.style.color = '#ff6666';
-        }
+        buyStatus.textContent = '✅ Please send BNB to the address above manually.';
+        buyStatus.style.color = '#ffd700';
+        // In a real implementation, you would redirect to a payment page or show the address
     });
 
     // ---- BURN TRACKER ----
