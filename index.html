@@ -476,7 +476,7 @@
         <h3 style="color:#ffd700;">🚀 Referral Program</h3>
         <p style="color:#aaa; font-size:0.95rem;">Share your referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
-        <code id="referralLink" style="background:#1a1a1a; padding:8px 16px; border-radius:8px; display:inline-block; color:#ffd700; word-break:break-all; font-size:0.9rem;">https://slopeydude.github.io/btm-presale/?ref=YOUR_CODE</code>
+        <code id="referralLink" style="background:#1a1a1a; padding:8px 16px; border-radius:8px; display:inline-block; color:#ffd700; word-break:break-all; font-size:0.9rem; cursor:pointer;">https://bullythemarket.github.io/BullytheMarket/?ref=YOUR_CODE</code>
         <div style="margin-top:12px;">
             <input type="text" id="referralCode" placeholder="Enter referral code" />
             <button onclick="applyReferral()" class="btn-primary" style="padding:10px 24px; font-size:0.9rem; margin-left:8px;">Apply</button>
@@ -529,7 +529,7 @@
 </div>
 
 <script>
-    // PARTICLES BACKGROUND
+    // ---- PARTICLES BACKGROUND ----
     (function particles() {
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
@@ -589,6 +589,7 @@
         animate();
     })();
 
+    // ---- COPY ADDRESS ----
     function copyAddress() {
         const addr = document.getElementById('wallet-address').innerText;
         navigator.clipboard.writeText(addr).then(() => {
@@ -599,23 +600,83 @@
         });
     }
 
-    // REFERRAL PROGRAM
-    function applyReferral() {
-        const code = document.getElementById('referralCode').value.trim();
-        if (code) {
-            localStorage.setItem('btm_referral', code);
-            document.getElementById('referralStatus').innerText = '✅ Referral code applied! You will receive 5% bonus tokens.';
-            document.getElementById('referralStatus').style.color = '#ffd700';
-        } else {
-            document.getElementById('referralStatus').innerText = '❌ Please enter a valid referral code.';
-            document.getElementById('referralStatus').style.color = '#ff6666';
-        }
-    }
+    // ---- REFERRAL SYSTEM ----
+    (function referralSystem() {
+        const linkEl = document.getElementById('referralLink');
+        const inputEl = document.getElementById('referralCode');
+        const statusEl = document.getElementById('referralStatus');
 
-    // BURN TRACKER
+        function generateReferralCode() {
+            let code = localStorage.getItem('btm_referral_code');
+            if (!code) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < 8; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                code = result;
+                localStorage.setItem('btm_referral_code', code);
+            }
+            return code;
+        }
+
+        function getReferralFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('ref');
+        }
+
+        function updateReferralLink() {
+            const code = generateReferralCode();
+            const baseUrl = 'https://bullythemarket.github.io/BullytheMarket/';
+            const fullLink = `${baseUrl}?ref=${code}`;
+            linkEl.textContent = fullLink;
+            linkEl.style.cursor = 'pointer';
+            linkEl.onclick = function() {
+                navigator.clipboard.writeText(fullLink);
+                statusEl.textContent = '✅ Referral link copied!';
+                statusEl.style.color = '#ffd700';
+                setTimeout(() => {
+                    statusEl.textContent = '';
+                }, 3000);
+            };
+        }
+
+        function applyReferralCode(code) {
+            if (code) {
+                localStorage.setItem('btm_referral_applied', code);
+                statusEl.textContent = `✅ Referral code "${code}" applied! You will get 5% bonus tokens.`;
+                statusEl.style.color = '#ffd700';
+                inputEl.value = code;
+            } else {
+                statusEl.textContent = '❌ Please enter a valid referral code.';
+                statusEl.style.color = '#ff6666';
+            }
+        }
+
+        function checkURLForReferral() {
+            const ref = getReferralFromURL();
+            if (ref) {
+                applyReferralCode(ref);
+            }
+        }
+
+        window.applyReferral = function() {
+            const code = inputEl.value.trim().toUpperCase();
+            if (code) {
+                applyReferralCode(code);
+            } else {
+                statusEl.textContent = '❌ Please enter a valid referral code.';
+                statusEl.style.color = '#ff6666';
+            }
+        };
+
+        checkURLForReferral();
+        updateReferralLink();
+    })();
+
+    // ---- BURN TRACKER ----
     async function fetchBurnData() {
         // Placeholder — replace with actual Web3 call after deployment
-        // In production, use ethers.js or web3.js to fetch balance of dead address
         document.getElementById('burnAmount').innerText = '1,234,567 $BTM';
     }
     fetchBurnData();
