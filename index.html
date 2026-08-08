@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
+        /* ... (styles remain the same) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -401,7 +402,6 @@
             .presale-box .address-row code { font-size: 0.9rem; text-align: center; }
             .presale-box .address-row button { width: 100%; justify-content: center; }
             .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-            .header .badge { font-size: 0.6rem; padding: 4px 8px; }
             .header { flex-wrap: wrap; justify-content: center; gap: 12px; }
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
@@ -422,7 +422,7 @@
         <div class="badge">🔥 Presale Live</div>
         <div>
             <span id="walletStatus" class="wallet-status">🔗 Not connected</span>
-            <button id="connectBtn" class="btn-connect">Connect Wallet</button>
+            <button id="connectBtn" class="btn-connect">Connect to Generate Referral</button>
         </div>
     </header>
 
@@ -545,10 +545,10 @@
         <span id="referralLinkDisplay" style="color:#ffd700; font-size:0.85rem; display:none;"></span>
     </div>
 
-    <!-- REFERRAL PROGRAM -->
+    <!-- REFERRAL PROGRAM (FOR USER A) -->
     <div class="referral-section">
-        <h3 style="color:#ffd700;">🚀 Referral Program</h3>
-        <p style="color:#aaa; font-size:0.95rem;">Share your referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
+        <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
+        <p style="color:#aaa; font-size:0.95rem;">Connect your wallet to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
         <code id="referralLink" style="background:#1a1a1a; padding:8px 16px; border-radius:8px; display:inline-block; color:#ffd700; word-break:break-all; font-size:0.9rem; cursor:pointer;">Connect wallet to generate</code>
         <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
@@ -557,9 +557,9 @@
         <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
     </div>
 
-    <!-- REFERRAL CODE INPUT -->
+    <!-- REFERRAL CODE INPUT (FOR USER B) -->
     <div class="referral-section" style="margin-top:0;">
-        <p style="color:#aaa; font-size:0.95rem;">Enter a referral code to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
+        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Enter it below to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:8px;">
             <input type="text" id="referralCodeInput" placeholder="Enter referral code" />
             <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Apply</button>
@@ -710,7 +710,7 @@
         generateReferralCode(address);
     }
 
-    // ---- WALLET CONNECT ----
+    // ---- WALLET CONNECT (ONLY FOR USER A) ----
     const connectBtn = document.getElementById('connectBtn');
 
     connectBtn.addEventListener('click', async () => {
@@ -730,7 +730,7 @@
         }
     });
 
-    // ---- GENERATE REFERRAL CODE ----
+    // ---- GENERATE REFERRAL CODE (FOR USER A) ----
     async function generateReferralCode(address) {
         if (!address) return;
         const code = address.slice(2, 8).toUpperCase();
@@ -769,7 +769,7 @@
         });
     }
 
-    // ---- APPLY REFERRAL CODE (for buyers) ----
+    // ---- APPLY REFERRAL CODE (FOR USER B) ----
     function applyReferralCode() {
         const input = document.getElementById('referralCodeInput');
         const code = input.value.trim().toUpperCase();
@@ -789,7 +789,7 @@
         }
     }
 
-    // ---- CHECK URL FOR REFERRAL CODE ----
+    // ---- CHECK URL FOR REFERRAL CODE (AUTO-APPLY FOR USER B) ----
     (function checkURL() {
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref');
@@ -801,11 +801,20 @@
         }
     })();
 
-    // ---- BUY TOKENS ----
+    // ---- BUY TOKENS (FOR USER B) ----
     document.getElementById('buyBtn').addEventListener('click', async () => {
+        // User B can buy without connecting first
+        let signer = provider ? provider.getSigner() : null;
         if (!signer) {
-            alert('Please connect your wallet first.');
-            return;
+            // If not connected, prompt connection
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+            } catch (error) {
+                alert('Please connect your wallet to buy.');
+                return;
+            }
         }
         const amount = document.getElementById('bnbAmount').value;
         if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
