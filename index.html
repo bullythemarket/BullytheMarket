@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
-        /* ... (all styles remain the same as the restored version) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -98,11 +97,6 @@
             text-transform: uppercase;
             color: #ffd700;
             white-space: nowrap;
-        }
-        .header .wallet-status {
-            color: #aaa;
-            font-size: 0.8rem;
-            margin-right: 12px;
         }
         .hero {
             display: flex;
@@ -434,7 +428,6 @@
         <div class="badge">🔥 Presale Live</div>
         <div>
             <span id="walletStatus" class="wallet-status">🔗 Not connected</span>
-            <button id="connectBtn" class="btn-connect">Connect to Generate Referral</button>
         </div>
     </header>
 
@@ -561,6 +554,9 @@
     <div class="referral-section">
         <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
         <p style="color:#aaa; font-size:0.95rem;">Connect your wallet to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
+            <button id="connectBtn" class="btn-connect">Connect to Generate Referral</button>
+        </div>
         <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
         <div id="referralLink" class="referral-link-display">Connect wallet to generate</div>
         <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
@@ -714,13 +710,12 @@
                 .then(accounts => {
                     console.log('Accounts connected:', accounts);
                     document.getElementById('walletStatus').textContent = '✅ Connected';
+                    document.getElementById('walletStatus2').textContent = '✅ Connected';
                     document.getElementById('connectBtn').textContent = '🔗 Connected';
                     document.getElementById('connectBtn').classList.add('btn-connect-connected');
                     const address = accounts[0];
-                    document.getElementById('walletStatus2').textContent = '✅ Connected';
                     document.getElementById('walletAddressDisplay').style.display = 'inline';
                     document.getElementById('walletAddressDisplay').textContent = address;
-                    // Generate referral link
                     generateReferralCode(address);
                 })
                 .catch(error => {
