@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <style>
+        /* ... (styles remain the same) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -292,17 +293,10 @@
             border-radius: 40px;
             width: 200px;
             margin: 8px 0;
-            transition: border-color 0.3s ease;
         }
         .referral-section input:focus {
             outline: none;
             border-color: #ffd700;
-        }
-        .referral-section input.success {
-            border-color: #ffd700;
-        }
-        .referral-section input.error {
-            border-color: #ff6666;
         }
         .burn-tracker {
             background: rgba(255,255,255,0.03);
@@ -360,8 +354,7 @@
             .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
-            .referral-section input { width: 100%; max-width: 250px; }
-            .referral-section .btn-primary { width: 100%; max-width: 250px; margin: 4px 0; }
+            .referral-section input { width: 100%; }
         }
     </style>
 </head>
@@ -681,18 +674,16 @@
                 statusEl.textContent = `✅ Referral code "${code}" applied! You will get 5% bonus tokens.`;
                 statusEl.style.color = '#ffd700';
                 inputEl.value = code;
-                inputEl.classList.add('success');
-                inputEl.classList.remove('error');
+                inputEl.style.borderColor = '#ffd700';
                 setTimeout(() => {
-                    inputEl.classList.remove('success');
+                    inputEl.style.borderColor = '#333';
                 }, 3000);
             } else {
                 statusEl.textContent = '❌ Please enter a valid referral code (at least 4 characters).';
                 statusEl.style.color = '#ff6666';
-                inputEl.classList.add('error');
-                inputEl.classList.remove('success');
+                inputEl.style.borderColor = '#ff6666';
                 setTimeout(() => {
-                    inputEl.classList.remove('error');
+                    inputEl.style.borderColor = '#333';
                 }, 3000);
             }
         }
@@ -713,10 +704,9 @@
             } else {
                 statusEl.textContent = '❌ Please enter a referral code.';
                 statusEl.style.color = '#ff6666';
-                inputEl.classList.add('error');
-                inputEl.classList.remove('success');
+                inputEl.style.borderColor = '#ff6666';
                 setTimeout(() => {
-                    inputEl.classList.remove('error');
+                    inputEl.style.borderColor = '#333';
                 }, 3000);
             }
         };
