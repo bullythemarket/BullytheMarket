@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
-        /* ... (styles remain the same) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -324,12 +323,6 @@
         .referral-section input:focus {
             outline: none;
             border-color: #ffd700;
-        }
-        .referral-section input.success {
-            border-color: #ffd700;
-        }
-        .referral-section input.error {
-            border-color: #ff6666;
         }
         .burn-tracker {
             background: rgba(255,255,255,0.03);
@@ -711,9 +704,7 @@
     }
 
     // ---- WALLET CONNECT (ONLY FOR USER A) ----
-    const connectBtn = document.getElementById('connectBtn');
-
-    connectBtn.addEventListener('click', async () => {
+    document.getElementById('connectBtn').addEventListener('click', async function() {
         if (typeof window.ethereum === 'undefined') {
             alert('Please install MetaMask!');
             return;
@@ -726,7 +717,7 @@
             updateUI(userAddress);
         } catch (error) {
             console.error(error);
-            alert('Connection failed.');
+            alert('Connection failed. Please try again.');
         }
     });
 
@@ -802,7 +793,7 @@
     })();
 
     // ---- BUY TOKENS (FOR USER B) ----
-    document.getElementById('buyBtn').addEventListener('click', async () => {
+    document.getElementById('buyBtn').addEventListener('click', async function() {
         // User B can buy without connecting first
         let signer = provider ? provider.getSigner() : null;
         if (!signer) {
