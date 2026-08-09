@@ -289,6 +289,26 @@
             color: #888;
             margin: 12px 0;
         }
+        .presale-box .instruction {
+            background: rgba(255,215,0,0.05);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid rgba(255,215,0,0.1);
+            text-align: left;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .presale-box .instruction li {
+            list-style: none;
+            padding: 4px 0;
+            color: #ccc;
+        }
+        .presale-box .instruction li::before {
+            content: "▸ ";
+            color: #ffd700;
+        }
         .referral-section {
             background: rgba(255,255,255,0.03);
             border-radius: 20px;
@@ -352,25 +372,6 @@
             border: 1px solid rgba(255,215,0,0.2);
             text-align: center;
         }
-        .wallet-section {
-            background: rgba(255,215,0,0.05);
-            border-radius: 20px;
-            padding: 16px 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(255,215,0,0.15);
-            text-align: center;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-        .wallet-section .address {
-            color: #ffd700;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
         .footer {
             border-top: 1px solid #222;
             padding: 24px 0;
@@ -406,7 +407,6 @@
             .tokenomics { grid-template-columns: repeat(2, 1fr); }
             .footer { flex-direction: column; text-align: center; }
             .referral-section input { width: 100%; }
-            .wallet-section { flex-direction: column; }
         }
     </style>
 </head>
@@ -566,7 +566,7 @@
         <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Coming soon after PancakeSwap launch.</p>
     </div>
 
-    <!-- PRESALE BOX -->
+    <!-- PRESALE BOX – UPDATED (Clean, no input field) -->
     <section id="presale" class="presale-box">
         <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
             🔥 Presale <span class="gold-text">Live</span>
@@ -575,16 +575,18 @@
         <div class="timer" id="countdown">14d 00h 00m 00s</div>
         <div class="rate">202,700 $BTM per 1 BNB</div>
         <div class="cap">🔥 Presale Cap: 50 BNB</div>
-        <p style="margin:12px 0; font-size:1.05rem; color:#ccc;">
-            Send any amount of BNB (0.01 – 5 BNB) — receive tokens automatically.
-        </p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <input type="number" id="bnbAmount" placeholder="BNB amount (e.g. 0.1)" step="0.01" min="0.01" max="5" style="background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px; width:200px;" />
-            <button id="buyBtn" class="btn-primary" style="padding:10px 24px; font-size:0.9rem;">Buy $BTM</button>
+
+        <div class="instruction">
+            <strong style="color:#ffd700;">How to participate:</strong>
+            <ul>
+                <li>Copy the address below</li>
+                <li>Send BNB (0.01 – 5 BNB) from your wallet</li>
+                <li>Tokens are sent to you automatically</li>
+            </ul>
         </div>
-        <p id="buyStatus" style="color:#888; font-size:0.9rem; margin-top:8px;"></p>
+
         <div class="address-row">
-            <code id="wallet-address">0xA9A040A0633647087b4d7cAcbE375f43FD6662D8</code>
+            <code id="wallet-address">0x1d29DDdFAe165fc66Bd0477d6F39eCCB3233b101</code>
             <button onclick="copyAddress()">📋 Copy</button>
         </div>
         <div class="minmax">
@@ -744,19 +746,6 @@
             document.getElementById('referralCodeStatus').style.color = '#ffd700';
         }
     })();
-
-    // ---- BUY TOKENS ----
-    document.getElementById('buyBtn').addEventListener('click', async function() {
-        const amount = document.getElementById('bnbAmount').value;
-        if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
-            alert('Enter a valid BNB amount (0.01 – 5 BNB).');
-            return;
-        }
-        const referralCode = localStorage.getItem('btm_referral_applied') || '';
-        const buyStatus = document.getElementById('buyStatus');
-        buyStatus.textContent = '✅ Please send BNB to the address above manually.';
-        buyStatus.style.color = '#ffd700';
-    });
 
     // ---- BURN TRACKER ----
     async function fetchBurnData() {
