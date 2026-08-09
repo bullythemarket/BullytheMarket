@@ -6,9 +6,8 @@
     <title>$BTM – Bully the Market · Presale</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-        /* --- Your existing styles (kept intact) --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -18,7 +17,6 @@
             line-height: 1.6;
             min-height: 100vh;
         }
-        a { color: #ffd700; text-decoration: none; }
         #particles-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -57,19 +55,6 @@
             text-align: center;
         }
         .btn-secondary:hover { background: rgba(255,215,0,0.15); border-color: #ffd700; }
-        .btn-generate {
-            display: inline-block;
-            background: #ffd700;
-            color: #0b0b0b;
-            padding: 10px 24px;
-            border-radius: 60px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-        .btn-generate:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
         .header {
             display: flex;
             justify-content: space-between;
@@ -89,7 +74,6 @@
             font-weight: 600;
             text-transform: uppercase;
             color: #ffd700;
-            white-space: nowrap;
         }
         .hero {
             display: flex;
@@ -97,18 +81,6 @@
             align-items: center;
             text-align: center;
             padding: 20px 0 40px;
-            animation: fadeUp 0.8s ease-out;
-        }
-        .hero .freedom-badge {
-            background: rgba(255,215,0,0.1);
-            border: 1px solid rgba(255,215,0,0.5);
-            border-radius: 40px;
-            padding: 6px 18px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #ffd700;
-            margin-bottom: 20px;
         }
         .hero h1 {
             font-family: 'Bebas Neue', sans-serif;
@@ -131,97 +103,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-        .hero .manifesto {
-            max-width: 720px;
-            font-size: 1rem;
-            color: #ccc;
-            border-left: 3px solid #ffd700;
-            padding-left: 20px;
-            text-align: left;
-            margin: 20px auto 30px;
-            line-height: 1.7;
-        }
-        .hero .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-        .story {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            align-items: center;
-            margin: 50px 0;
-        }
-        .story-text h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 16px; }
-        .story-text p { color: #bbb; margin-bottom: 14px; font-size: 1rem; }
-        .story-image {
-            background: radial-gradient(circle at center, rgba(255,215,0,0.08), transparent 70%);
-            border-radius: 32px;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-            border: 1px solid rgba(255,215,0,0.15);
-        }
-        .tokenomics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
-        }
-        .token-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 20px 12px;
-            text-align: center;
-            border: 1px solid rgba(255,215,0,0.08);
-            transition: 0.3s;
-        }
-        .token-card:hover { border-color: rgba(255,215,0,0.3); transform: translateY(-4px); }
-        .token-card .number { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #ffd700; }
-        .token-card .label { font-size: 0.85rem; color: #999; margin-top: 6px; }
-        .roadmap-expanded {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 40px 0;
-        }
-        .roadmap-phase {
-            background: rgba(255,255,255,0.02);
-            border-radius: 20px;
-            padding: 24px 20px;
-            border-left: 4px solid #ffd700;
-            transition: 0.3s;
-        }
-        .roadmap-phase:hover { background: rgba(255,215,0,0.05); }
-        .roadmap-phase .phase-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
-            color: #ffd700;
-            margin-bottom: 8px;
-        }
-        .roadmap-phase .phase-desc {
-            font-size: 0.95rem;
-            color: #aaa;
-            margin-bottom: 8px;
-        }
-        .roadmap-phase ul {
-            list-style: none;
-            padding: 0;
-        }
-        .roadmap-phase ul li {
-            padding: 4px 0;
-            font-size: 0.9rem;
-            color: #ccc;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .roadmap-phase ul li::before {
-            content: "⚡";
-            color: #ffd700;
-        }
-        @media (max-width: 768px) {
-            .roadmap-expanded { grid-template-columns: 1fr; }
         }
         .presale-box {
             background: rgba(255,255,255,0.03);
@@ -307,17 +188,6 @@
             width: 100%;
             max-width: 400px;
             margin: 8px 0;
-            transition: border-color 0.3s ease;
-        }
-        .referral-section input:focus {
-            outline: none;
-            border-color: #ffd700;
-        }
-        .referral-section input.success {
-            border-color: #ffd700;
-        }
-        .referral-section input.error {
-            border-color: #ff6666;
         }
         .referral-link-display {
             background: #1a1a1a;
@@ -331,47 +201,16 @@
             margin: 8px 0;
         }
         .referral-link-display:hover { background: #2a2a2a; }
-        .burn-tracker {
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 24px 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(255,215,0,0.15);
-            text-align: center;
-        }
-        .price-widget {
-            margin: 30px 0;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(255,215,0,0.15);
-        }
-        .farming-section {
+        .social-proof {
             background: rgba(255,215,0,0.05);
-            border-radius: 20px;
-            padding: 24px 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(255,215,0,0.2);
-            text-align: center;
-        }
-        .wallet-section {
-            background: rgba(255,215,0,0.05);
-            border-radius: 20px;
-            padding: 16px 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(255,215,0,0.15);
-            text-align: center;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-        .wallet-section .address {
-            color: #ffd700;
-            font-family: 'Courier New', monospace;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            border: 1px solid rgba(255,215,0,0.1);
             font-size: 0.9rem;
-            word-break: break-all;
+            color: #aaa;
         }
+        .social-proof span { color: #ffd700; font-weight: 600; }
         .footer {
             border-top: 1px solid #222;
             padding: 24px 0;
@@ -384,71 +223,30 @@
             color: #666;
         }
         .footer a { color: #ffd700; }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .float { animation: float 4s ease-in-out infinite; }
-        .social-proof {
-            background: rgba(255,215,0,0.05);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin: 12px 0;
-            border: 1px solid rgba(255,215,0,0.1);
-            font-size: 0.9rem;
-            color: #aaa;
-            max-height: 60px;
-            overflow: hidden;
-        }
-        .social-proof span { color: #ffd700; font-weight: 600; }
-        .leaderboard {
+        .tokenomics {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            margin: 12px 0;
-            font-size: 0.85rem;
-            color: #aaa;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin: 30px 0;
         }
-        .leaderboard .rank { color: #ffd700; font-weight: 700; }
+        .token-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.08);
+        }
+        .token-card .number { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: #ffd700; }
+        .token-card .label { font-size: 0.8rem; color: #999; margin-top: 4px; }
         @media (max-width: 600px) {
             .container { padding: 0 16px; }
             .hero h1 { font-size: 3rem; }
             .presale-box .timer { font-size: 2.2rem; }
-            .presale-box .rate { font-size: 1.1rem; }
             .presale-box .address-row { flex-direction: column; border-radius: 20px; padding: 16px; }
-            .presale-box .address-row code { font-size: 0.9rem; text-align: center; }
-            .presale-box .address-row button { width: 100%; justify-content: center; }
             .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
             .header { flex-wrap: wrap; justify-content: center; gap: 12px; }
-            .hero .manifesto { font-size: 0.9rem; padding-left: 14px; }
-            .tokenomics { grid-template-columns: repeat(2, 1fr); }
-            .footer { flex-direction: column; text-align: center; }
             .referral-section input { width: 100%; }
-            .wallet-section { flex-direction: column; }
-            .leaderboard { grid-template-columns: 1fr; }
-        }
-
-        /* Wallet connect button */
-        .connect-wallet-btn {
-            background: #ffd700;
-            color: #0b0b0b;
-            padding: 10px 24px;
-            border-radius: 60px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: 0.25s;
-            font-size: 0.9rem;
-        }
-        .connect-wallet-btn:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(255,215,0,0.3); }
-        .wallet-status {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin: 8px 0;
+            .tokenomics { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -457,198 +255,48 @@
 <canvas id="particles-canvas"></canvas>
 
 <div class="container">
-
     <header class="header">
         <div class="logo"><span>$</span>BTM</div>
         <div class="badge">🔥 Presale Live</div>
     </header>
 
     <section class="hero">
-        <div class="freedom-badge">🚀 FREEDOM SALE</div>
         <h1><span class="gold-text">Bully</span><br /><span style="color:#fff;">the Market</span></h1>
         <div class="sub">Stop being exit liquidity.</div>
         <div class="tagline">Start rewriting the rules.</div>
-        <div class="manifesto">
-            <strong>$BTM is not a coin — it's a counter‑strike.</strong> Born from the ashes of the bear market, we engineered a token that <strong>rewards the holders, burns the weak, and redistributes power</strong> to the people. No VC backdoors, no whale dumps, no manipulation. Just pure, unadulterated <strong>financial freedom</strong>.
-        </div>
-        <div class="cta-buttons">
-            <button class="btn-primary" onclick="document.getElementById('presale').scrollIntoView({behavior:'smooth'})">⚡ Join Presale</button>
-            <a href="https://t.me/btmfans" target="_blank" class="btn-secondary" style="display:inline-block; text-decoration:none;">💬 Community</a>
-        </div>
     </section>
 
-    <!-- SOCIAL PROOF TICKER -->
     <div class="social-proof" id="socialProof">
-        🔥 <span>0x9F7...e3B</span> just bought <span>2.5 BNB</span> of $BTM · 
+        🔥 <span>0x9F7...e3B</span> just bought <span>2.5 BNB</span> · 
         🔥 <span>0x3A1...D4C</span> bought <span>1.2 BNB</span> · 
         🔥 <span>0xE8B...9F2</span> bought <span>4.0 BNB</span>
     </div>
 
-    <!-- PRICE WIDGET -->
-    <div class="price-widget">
-        <iframe
-            src="https://dexscreener.com/bsc/0x...?embed=1&theme=dark"
-            width="100%"
-            height="400"
-            style="border: none; border-radius: 12px;"
-            title="$BTM Price Chart"
-        ></iframe>
-    </div>
-
-    <section class="story">
-        <div class="story-text">
-            <h2><span class="gold-text">The</span> Rebellion</h2>
-            <p>We watched retail traders get crushed by whales, hedge funds, and insider games. We decided to fight back.</p>
-            <p><strong>$BTM</strong> is engineered with <strong>anti‑whale</strong> mechanics, <strong>auto‑burn</strong> on every transaction, and a <strong>2% redistribution</strong> to loyal holders. The more they try to dump, the stronger we become.</p>
-            <p>This is not a meme. This is a <strong>movement</strong>.</p>
-        </div>
-        <div class="story-image float">🐂🔥</div>
-    </section>
-
-    <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
-        <span class="gold-text">Tokenomics</span> — Built to Last
-    </h2>
+    <!-- TOKENOMICS (Updated for 100M Supply) -->
     <div class="tokenomics">
-        <div class="token-card"><div class="number">1B</div><div class="label">Total Supply</div></div>
+        <div class="token-card"><div class="number">100M</div><div class="label">Total Supply</div></div>
+        <div class="token-card"><div class="number">50%</div><div class="label">Presale Allocation</div></div>
+        <div class="token-card"><div class="number">10%</div><div class="label">Liquidity</div></div>
+        <div class="token-card"><div class="number">1%</div><div class="label">Auto-Burn</div></div>
         <div class="token-card"><div class="number">2%</div><div class="label">Redistribution</div></div>
-        <div class="token-card"><div class="number">1%</div><div class="label">Auto‑Burn</div></div>
-        <div class="token-card"><div class="number">1 Year</div><div class="label">Liquidity Lock</div></div>
-        <div class="token-card"><div class="number">0%</div><div class="label">Dev Wallet</div></div>
-        <div class="token-card"><div class="number">✅</div><div class="label">CertiK Audit</div></div>
+        <div class="token-card"><div class="number">✅</div><div class="label">Audited</div></div>
     </div>
 
-    <!-- BURN TRACKER -->
-    <div class="burn-tracker">
-        <h3 style="font-size:1.4rem; color:#ffd700;">🔥 Total Burned</h3>
-        <p id="burnAmount" style="font-size:2rem; font-weight:700; color:#fff;">Loading...</p>
-        <p style="color:#888; font-size:0.9rem;">Tokens burned permanently from supply</p>
-    </div>
-
-    <!-- ROADMAP -->
-    <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
-        <span class="gold-text">Roadmap</span> to Dominance
-    </h2>
-    <div class="roadmap-expanded">
-        <div class="roadmap-phase">
-            <div class="phase-title">Phase 1</div>
-            <div class="phase-desc">Foundation</div>
-            <ul>
-                <li>Presale launch (50 BNB cap)</li>
-                <li>Community building (Telegram, X)</li>
-                <li>PancakeSwap listing</li>
-                <li>Liquidity locked for 1 year</li>
-            </ul>
-        </div>
-        <div class="roadmap-phase">
-            <div class="phase-title">Phase 2</div>
-            <div class="phase-desc">Utility Rollout</div>
-            <ul>
-                <li>Snapshot governance portal live</li>
-                <li>Staking contract activated</li>
-                <li>CoinMarketCap & CoinGecko listing</li>
-                <li>10,000 holders target</li>
-            </ul>
-        </div>
-        <div class="roadmap-phase">
-            <div class="phase-title">Phase 3</div>
-            <div class="phase-desc">Ecosystem Expansion</div>
-            <ul>
-                <li>Major marketing campaign</li>
-                <li>Partnership announcements</li>
-                <li>Burn event (10% of supply)</li>
-                <li>DAO treasury established</li>
-            </ul>
-        </div>
-        <div class="roadmap-phase">
-            <div class="phase-title">Phase 4</div>
-            <div class="phase-desc">CEX & Global Growth</div>
-            <ul>
-                <li>Tier-1 CEX listing (BitMart, MEXC)</li>
-                <li>$BTM launchpad — projects launch using $BTM</li>
-                <li>NFT marketplace integration</li>
-                <li>Multi-chain expansion</li>
-            </ul>
-        </div>
-        <div class="roadmap-phase" style="grid-column: 1 / -1;">
-            <div class="phase-title">Phase 5</div>
-            <div class="phase-desc">Long-Term Vision</div>
-            <ul>
-                <li>Full DAO governance</li>
-                <li>$BTM DeFi dashboard</li>
-                <li>Ecosystem grants for developers</li>
-                <li>Global community events</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- TOP REFERRERS LEADERBOARD (FAKE) -->
-    <div class="referral-section">
-        <h3 style="color:#ffd700;">🏆 Top Referrers</h3>
-        <div class="leaderboard">
-            <div><span class="rank">🥇</span> 0x7F3...A91 — <span style="color:#ffd700;">12 BNB</span></div>
-            <div><span class="rank">🥈</span> 0x2B1...C4D — <span style="color:#ffd700;">8.5 BNB</span></div>
-            <div><span class="rank">🥉</span> 0x9E8...F2A — <span style="color:#ffd700;">5.2 BNB</span></div>
-        </div>
-    </div>
-
-    <!-- REFERRAL PROGRAM (FOR USER A) -->
-    <div class="referral-section">
-        <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
-        <p style="color:#aaa; font-size:0.95rem;">Enter your wallet address to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <input type="text" id="walletInput" placeholder="Enter your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
-            <button id="generateBtn" class="btn-generate">Generate Referral Link</button>
-        </div>
-        <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
-        <div id="referralLink" class="referral-link-display">Enter wallet address above</div>
-        <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
-            <button onclick="copyReferralLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">📋 Copy Link</button>
-        </div>
-        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-    </div>
-
-    <!-- REFERRAL CODE INPUT (FOR USER B) -->
-    <div class="referral-section" style="margin-top:0;">
-        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Enter it below to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:8px;">
-            <input type="text" id="referralCodeInput" placeholder="Enter referral code" />
-            <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Apply</button>
-        </div>
-        <p id="referralCodeStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-    </div>
-
-    <!-- FARMING / YIELD BOOSTS -->
-    <div class="farming-section">
-        <h3 style="color:#ffd700;">🌾 Farming & Yield Boosts</h3>
-        <p style="color:#ccc; font-size:1rem;">LP providers will receive <strong style="color:#ffd700;">2x rewards</strong> for the first 30 days after launch.</p>
-        <p style="color:#888; font-size:0.9rem;">Stake your LP tokens and earn extra $BTM.</p>
-        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Coming soon after PancakeSwap launch.</p>
-    </div>
-
-    <!-- PRESALE BOX (UPGRADED WITH WALLET CONNECT) -->
     <section id="presale" class="presale-box">
-        <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
+        <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem;">
             🔥 Presale <span class="gold-text">Live</span>
         </h2>
-        <p style="color:#aaa; margin-bottom:8px;">Secure your $BTM before the public launch.</p>
         <div class="timer" id="countdown">14d 00h 00m 00s</div>
-        <div class="rate">2,000,000 $BTM per 1 BNB</div>
-        <div class="cap">🔥 Presale Cap: 50 BNB · <span id="raisedAmount">0.00</span> BNB raised</div>
+        <div class="rate">202,700 $BTM per 1 BNB</div>
+        <div class="cap">🔥 Presale Cap: 50 BNB</div>
 
-        <!-- Wallet Connect & Buy Flow -->
-        <div style="margin: 20px 0;">
-            <button id="connectWalletBtn" class="connect-wallet-btn">🔗 Connect Wallet</button>
-            <div id="walletStatus" class="wallet-status">Not connected</div>
-        </div>
+        <p style="margin:12px 0; color:#ccc; font-size:1rem;">
+            Send BNB to the address below. Tokens will be sent automatically.
+        </p>
 
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <input type="number" id="bnbAmount" placeholder="BNB amount (e.g. 0.1)" step="0.01" min="0.01" max="5" style="background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px; width:200px;" />
-            <button id="buyBtn" class="btn-primary" style="padding:10px 24px; font-size:0.9rem;">Buy $BTM</button>
-        </div>
-        <p id="buyStatus" style="color:#888; font-size:0.9rem; margin-top:8px;"></p>
-
+        <!-- ✅ PRESALE ADDRESS UPDATED -->
         <div class="address-row">
-            <code id="wallet-address">0x57C630A74562E8616f41A78Ab48f5f64c7a71087</code>
+            <code id="wallet-address">0x1d29DDdFAe165fc66Bd0477d6F39eCCB3233b101</code>
             <button onclick="copyAddress()">📋 Copy</button>
         </div>
         <div class="minmax">
@@ -656,34 +304,39 @@
             <span>Max: 5 BNB</span>
             <span>🔒 Liquidity locked</span>
         </div>
-        <p style="margin-top:16px; font-size:0.9rem; color:#888;">
-            ✅ Automatic allocation — send any amount, receive proportional tokens.
-        </p>
     </section>
+
+    <!-- REFERRAL GENERATOR -->
+    <div class="referral-section">
+        <h3 style="color:#ffd700;">🚀 Referral Program</h3>
+        <p style="color:#aaa; font-size:0.95rem;">Enter your wallet to generate a referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>.</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
+            <input type="text" id="walletInput" placeholder="0x..." style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
+            <button id="generateBtn" class="btn-secondary" style="padding:10px 24px;">Generate</button>
+        </div>
+        <div id="referralLink" class="referral-link-display">Enter wallet above</div>
+        <button onclick="copyReferralLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem; margin-top:8px;">📋 Copy Link</button>
+        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+    </div>
 
     <footer class="footer">
         <span>© 2025 $BTM – Bully the Market</span>
         <span>
-            <a href="https://t.me/btmfans" target="_blank">Telegram</a> &nbsp;|&nbsp;
-            <a href="https://x.com/yourhandle" target="_blank">Twitter</a>
+            <a href="#">Telegram</a> &nbsp;|&nbsp;
+            <a href="#">Twitter</a>
         </span>
     </footer>
 </div>
 
 <script>
-    // ---- PARTICLES (unchanged) ----
-    (function particles() {
+    // ---- PARTICLES ----
+    (function() {
         const canvas = document.getElementById('particles-canvas');
         const ctx = canvas.getContext('2d');
         let w, h, particles = [];
-
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
-
         class Particle {
             constructor() { this.reset(); }
             reset() {
@@ -706,26 +359,10 @@
                 ctx.fill();
             }
         }
-        for (let i = 0; i < 120; i++) particles.push(new Particle());
-
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, w, h);
             particles.forEach(p => { p.update(); p.draw(); });
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx*dx + dy*dy);
-                    if (dist < 100) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(255, 215, 0, ${0.15 * (1 - dist/100)})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
-                }
-            }
             requestAnimationFrame(animate);
         }
         animate();
@@ -744,177 +381,70 @@
 
     // ---- GENERATE REFERRAL LINK ----
     document.getElementById('generateBtn').addEventListener('click', function() {
-        const walletInput = document.getElementById('walletInput');
-        const address = walletInput.value.trim();
-        const statusEl = document.getElementById('referralStatus');
+        const input = document.getElementById('walletInput');
+        const address = input.value.trim();
+        const status = document.getElementById('referralStatus');
         const linkEl = document.getElementById('referralLink');
 
         if (!address || !address.startsWith('0x') || address.length !== 42) {
-            statusEl.textContent = '❌ Please enter a valid wallet address (0x... 42 characters)';
-            statusEl.style.color = '#ff6666';
-            walletInput.classList.add('error');
-            walletInput.classList.remove('success');
+            status.textContent = '❌ Enter a valid 0x... address';
+            status.style.color = '#ff6666';
             return;
         }
 
-        walletInput.classList.remove('error');
-        walletInput.classList.add('success');
-        statusEl.textContent = '✅ Generating referral link...';
-        statusEl.style.color = '#ffd700';
-
         const code = address.slice(2, 8).toUpperCase();
-        const baseUrl = window.location.origin + window.location.pathname;
-        const link = `${baseUrl}?ref=${code}`;
+        const link = window.location.origin + window.location.pathname + '?ref=' + code;
         linkEl.textContent = link;
-        statusEl.textContent = '✅ Referral link generated! Share it to earn 5% bonus!';
-        statusEl.style.color = '#ffd700';
+        status.textContent = '✅ Referral link generated! Share to earn 5% bonus.';
+        status.style.color = '#ffd700';
     });
 
     // ---- COPY REFERRAL LINK ----
     function copyReferralLink() {
         const link = document.getElementById('referralLink').textContent;
-        if (link === 'Enter wallet address above') {
-            alert('Please generate a referral link first.');
-            return;
-        }
+        if (link === 'Enter wallet above') return alert('Generate a link first.');
         navigator.clipboard.writeText(link).then(() => {
             document.getElementById('referralStatus').textContent = '✅ Copied!';
-            setTimeout(() => { document.getElementById('referralStatus').textContent = ''; }, 3000);
+            setTimeout(() => document.getElementById('referralStatus').textContent = '', 3000);
         });
     }
 
-    // ---- APPLY REFERRAL CODE ----
-    function applyReferralCode() {
-        const input = document.getElementById('referralCodeInput');
-        const code = input.value.trim().toUpperCase();
-        if (code.length >= 4) {
-            localStorage.setItem('btm_referral_applied', code);
-            document.getElementById('referralCodeStatus').textContent = `✅ Referral code "${code}" applied! You get 10% bonus.`;
-            document.getElementById('referralCodeStatus').style.color = '#ffd700';
-        } else {
-            document.getElementById('referralCodeStatus').textContent = '❌ Please enter a valid code (4+ characters).';
-            document.getElementById('referralCodeStatus').style.color = '#ff6666';
+    // ---- COUNTDOWN (14 days) ----
+    (function() {
+        const timer = document.getElementById('countdown');
+        const KEY = 'btm_presale_end';
+        let end = parseInt(localStorage.getItem(KEY), 10);
+        if (!end || isNaN(end)) {
+            end = Date.now() + 14 * 24 * 3600 * 1000;
+            localStorage.setItem(KEY, end.toString());
         }
-    }
-
-    // ---- CHECK URL FOR REFERRAL CODE ----
-    (function checkURL() {
-        const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref');
-        if (ref) {
-            document.getElementById('referralCodeInput').value = ref;
-            localStorage.setItem('btm_referral_applied', ref);
-            document.getElementById('referralCodeStatus').textContent = `✅ Referral code "${ref}" auto-applied! You get 10% bonus.`;
-            document.getElementById('referralCodeStatus').style.color = '#ffd700';
+        function update() {
+            const diff = Math.max(0, end - Date.now());
+            if (diff <= 0) { timer.innerText = '00d 00h 00m 00s'; return; }
+            const s = Math.floor(diff / 1000);
+            const d = Math.floor(s / 86400);
+            const h = Math.floor((s % 86400) / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const sec = s % 60;
+            timer.innerText = `${String(d).padStart(2,'0')}d ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sec).padStart(2,'0')}s`;
         }
+        update();
+        setInterval(update, 1000);
     })();
-
-    // ---- WALLET CONNECT (MetaMask) ----
-    let connectedAddress = null;
-
-    document.getElementById('connectWalletBtn').addEventListener('click', async function() {
-        if (typeof window.ethereum !== 'undefined') {
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                connectedAddress = accounts[0];
-                document.getElementById('walletStatus').textContent = `✅ Connected: ${connectedAddress.slice(0,6)}...${connectedAddress.slice(-4)}`;
-                document.getElementById('connectWalletBtn').textContent = '✅ Connected';
-                document.getElementById('connectWalletBtn').style.background = '#28a745';
-            } catch (error) {
-                document.getElementById('walletStatus').textContent = '❌ Connection failed. Please try again.';
-            }
-        } else {
-            alert('Please install MetaMask or Trust Wallet to connect.');
-        }
-    });
-
-    // ---- BUY TOKENS (with wallet) ----
-    document.getElementById('buyBtn').addEventListener('click', async function() {
-        const amount = document.getElementById('bnbAmount').value;
-        if (!amount || parseFloat(amount) < 0.01 || parseFloat(amount) > 5) {
-            alert('Enter a valid BNB amount (0.01 – 5 BNB).');
-            return;
-        }
-
-        if (!connectedAddress) {
-            alert('Please connect your wallet first.');
-            return;
-        }
-
-        // In production, this would call your presale contract
-        // For now, we simulate a transaction
-        const buyStatus = document.getElementById('buyStatus');
-        buyStatus.textContent = '⏳ Sending transaction...';
-        buyStatus.style.color = '#ffd700';
-
-        // Simulate transaction
-        setTimeout(() => {
-            buyStatus.textContent = `✅ Sent ${amount} BNB to presale. Tokens will arrive shortly.`;
-            buyStatus.style.color = '#28a745';
-        }, 3000);
-    });
-
-    // ---- BURN TRACKER ----
-    async function fetchBurnData() {
-        document.getElementById('burnAmount').innerText = '1,234,567 $BTM';
-    }
-    fetchBurnData();
-
-    // ---- RAISED AMOUNT SIMULATION ----
-    let raised = 12.34;
-    setInterval(() => {
-        raised += Math.random() * 0.5;
-        document.getElementById('raisedAmount').innerText = raised.toFixed(2);
-    }, 8000);
 
     // ---- SOCIAL PROOF ROTATOR ----
-    const proofMessages = [
-        '🔥 <span>0x9F7...e3B</span> just bought <span>2.5 BNB</span> of $BTM',
-        '🔥 <span>0x3A1...D4C</span> bought <span>1.2 BNB</span> of $BTM',
-        '🔥 <span>0xE8B...9F2</span> bought <span>4.0 BNB</span> of $BTM',
-        '🔥 <span>0x7C2...A1F</span> bought <span>0.8 BNB</span> of $BTM',
-        '🔥 <span>0x4D9...B3E</span> bought <span>3.1 BNB</span> of $BTM'
+    const msgs = [
+        '🔥 <span>0x9F7...e3B</span> bought <span>2.5 BNB</span>',
+        '🔥 <span>0x3A1...D4C</span> bought <span>1.2 BNB</span>',
+        '🔥 <span>0xE8B...9F2</span> bought <span>4.0 BNB</span>',
+        '🔥 <span>0x7C2...A1F</span> bought <span>0.8 BNB</span>'
     ];
-    let proofIdx = 0;
+    let idx = 0;
     setInterval(() => {
         const el = document.getElementById('socialProof');
-        el.innerHTML = proofMessages[proofIdx % proofMessages.length] + ' · ' + 
-                        proofMessages[(proofIdx + 1) % proofMessages.length] + ' · ' +
-                        proofMessages[(proofIdx + 2) % proofMessages.length];
-        proofIdx++;
-    }, 10000);
-
-    // ---- COUNTDOWN (14 days) ----
-    (function persistentTimer() {
-        const timerEl = document.getElementById('countdown');
-        const KEY = 'btm_presale_end';
-        let endTime = parseInt(localStorage.getItem(KEY), 10);
-        if (!endTime || isNaN(endTime)) {
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
-            localStorage.setItem(KEY, endTime.toString());
-        }
-        function updateDisplay() {
-            const now = Date.now();
-            let diff = Math.max(0, endTime - now);
-            if (diff <= 0) {
-                timerEl.innerText = '00d 00h 00m 00s';
-                localStorage.removeItem(KEY);
-                return;
-            }
-            const totalSeconds = Math.floor(diff / 1000);
-            const days = Math.floor(totalSeconds / 86400);
-            const hours = Math.floor((totalSeconds % 86400) / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            timerEl.innerText =
-                `${String(days).padStart(2, '0')}d ` +
-                `${String(hours).padStart(2, '0')}h ` +
-                `${String(minutes).padStart(2, '0')}m ` +
-                `${String(seconds).padStart(2, '0')}s`;
-        }
-        updateDisplay();
-        setInterval(updateDisplay, 1000);
-    })();
+        el.innerHTML = msgs[idx % msgs.length] + ' · ' + msgs[(idx + 1) % msgs.length] + ' · ' + msgs[(idx + 2) % msgs.length];
+        idx++;
+    }, 8000);
 </script>
 </body>
 </html>
