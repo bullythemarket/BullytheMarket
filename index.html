@@ -300,8 +300,11 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .presale-box .instruction li {
+        .presale-box .instruction ul {
             list-style: none;
+            padding: 0;
+        }
+        .presale-box .instruction li {
             padding: 4px 0;
             color: #ccc;
         }
@@ -566,7 +569,7 @@
         <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Coming soon after PancakeSwap launch.</p>
     </div>
 
-    <!-- PRESALE BOX – UPDATED (Clean, no input field) -->
+    <!-- PRESALE BOX – UPDATED (Clean, no input field, countdown reset) -->
     <section id="presale" class="presale-box">
         <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
             🔥 Presale <span class="gold-text">Live</span>
@@ -757,17 +760,18 @@
     (function persistentTimer() {
         const timerEl = document.getElementById('countdown');
         const KEY = 'btm_presale_end';
-        let endTime = parseInt(localStorage.getItem(KEY), 10);
-        if (!endTime || isNaN(endTime)) {
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
-            localStorage.setItem(KEY, endTime.toString());
-        }
+
+        // 🔥 FORCE RESET: Clear any stored value so everyone sees 14 days
+        localStorage.removeItem(KEY);
+
+        let endTime = Date.now() + 14 * 24 * 3600 * 1000;
+        localStorage.setItem(KEY, endTime.toString());
+
         function updateDisplay() {
             const now = Date.now();
             let diff = Math.max(0, endTime - now);
             if (diff <= 0) {
                 timerEl.innerText = '00d 00h 00m 00s';
-                localStorage.removeItem(KEY);
                 return;
             }
             const totalSeconds = Math.floor(diff / 1000);
