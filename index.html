@@ -602,6 +602,42 @@
         </p>
     </section>
 
+    <!-- HOW TO SEE YOUR $BTM (WALLET IMPORT HELP) -->
+    <div class="referral-section" style="margin-top:30px;">
+        <h3 style="color:#ffd700;">👛 Don't See Your $BTM Yet?</h3>
+        <p style="color:#ccc; font-size:1rem;">
+            This is normal! Most wallets don't automatically display new tokens.
+            You just need to add $BTM manually — it only takes a minute.
+        </p>
+
+        <div style="text-align:left; max-width:560px; margin:16px auto;">
+            <strong style="color:#ffd700;">Works the same way in MetaMask, Trust Wallet, SafePal, OKX Wallet, Coinbase Wallet, TokenPocket, and most self-custody wallets:</strong>
+            <ul style="margin-top:8px; color:#bbb; padding-left:20px;">
+                <li>Make sure your wallet is set to <strong style="color:#ffd700;">BNB Smart Chain (BSC)</strong></li>
+                <li>Find "Add Token" / "Import Token" / "Add Custom Token" in your wallet</li>
+                <li>Paste the contract address below</li>
+                <li>Symbol (BTM) and decimals (18) should autofill</li>
+                <li>Confirm — your balance will appear</li>
+            </ul>
+        </div>
+
+        <div class="address-row">
+            <code id="token-contract-address">0xcF314b392B7B242d378ddEe602047EB7B6A4eDf1</code>
+            <button onclick="copyTokenAddress()">📋 Copy</button>
+        </div>
+        <p id="tokenAddressCopyStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+
+        <div style="max-width:560px; margin:20px auto 0; padding:14px 18px; border:1px solid rgba(255,80,80,0.4); border-radius:16px; background:rgba(255,80,80,0.06); text-align:left;">
+            <strong style="color:#ff6666;">⚠️ Important:</strong>
+            <span style="color:#ddd; font-size:0.92rem;">
+                Only use a self-custody wallet address (MetaMask, Trust Wallet, etc.) to receive $BTM —
+                never send $BTM directly to an exchange deposit address (Binance, Coinbase, Kraken, etc.)
+                unless that exchange has officially listed $BTM. Exchanges generally do not credit unlisted
+                tokens, and funds sent that way can be permanently lost.
+            </span>
+        </div>
+    </div>
+
     <footer class="footer">
         <span>© 2025 $BTM – Bully the Market</span>
         <span>
@@ -680,6 +716,17 @@
             const orig = btn.innerText;
             btn.innerText = '✅ Copied!';
             setTimeout(() => btn.innerText = orig, 2000);
+        });
+    }
+
+    // ---- COPY TOKEN CONTRACT ADDRESS ----
+    function copyTokenAddress() {
+        const addr = document.getElementById('token-contract-address').innerText;
+        navigator.clipboard.writeText(addr).then(() => {
+            const statusEl = document.getElementById('tokenAddressCopyStatus');
+            statusEl.textContent = '✅ Copied! Paste it into your wallet\'s "Add Token" screen.';
+            statusEl.style.color = '#ffd700';
+            setTimeout(() => { statusEl.textContent = ''; }, 3000);
         });
     }
 
