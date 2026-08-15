@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.5/ethers.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -803,26 +804,23 @@
     }
     fetchBurnData();
 
-    // ---- PERSISTENT COUNTDOWN (14 DAYS) ----
-    (function persistentTimer() {
+    // ---- PRESALE COUNTDOWN (synced to on-chain presaleEndTime) ----
+    (function onChainTimer() {
         const timerEl = document.getElementById('countdown');
-        const KEY = 'btm_presale_end';
+        const PRESALE_ADDRESS = '0xb03A51dC8f91C25729f15E686A3df281AC522B52';
+        const RPC_URL = 'https://bsc-dataseed.binance.org/';
+        const PRESALE_ABI = ['function presaleEndTime() view returns (uint256)'];
 
-        // Check if we already have a stored end time
-        let endTime = parseInt(localStorage.getItem(KEY), 10);
+        let endTimeMs = null;
 
-        // If no stored time, or it's expired, set a new 14-day timer
-        if (!endTime || endTime <= Date.now()) {
-            endTime = Date.now() + 14 * 24 * 3600 * 1000;
-            localStorage.setItem(KEY, endTime.toString());
-        }
-
-        function updateDisplay() {
-            const now = Date.now();
-            let diff = Math.max(0, endTime - now);
+        function tick() {
+            if (endTimeMs === null) {
+                timerEl.innerText = 'Loading...';
+                return;
+            }
+            const diff = Math.max(0, endTimeMs - Date.now());
             if (diff <= 0) {
                 timerEl.innerText = '00d 00h 00m 00s';
-                localStorage.removeItem(KEY);
                 return;
             }
             const totalSeconds = Math.floor(diff / 1000);
@@ -837,8 +835,23 @@
                 `${String(seconds).padStart(2, '0')}s`;
         }
 
-        updateDisplay();
-        setInterval(updateDisplay, 1000);
+        async function fetchEndTime() {
+            try {
+                const provider = new ethers.JsonRpcProvider(RPC_URL);
+                const presale = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, provider);
+                const endTimeSeconds = await presale.presaleEndTime();
+                endTimeMs = Number(endTimeSeconds) * 1000;
+            } catch (err) {
+                console.error('Failed to fetch presaleEndTime from chain:', err);
+                timerEl.innerText = 'Unavailable';
+            }
+        }
+
+        fetchEndTime().then(tick);
+        setInterval(tick, 1000);
+        // Re-check the on-chain value periodically in case of an extension
+        // (extendPresale) — every 5 minutes is enough without hammering the RPC.
+        setInterval(fetchEndTime, 5 * 60 * 1000);
     })();
 </script>
 </body>
