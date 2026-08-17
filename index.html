@@ -652,9 +652,9 @@
             // Get current BNB/USD price
             let bnbUsd = null;
             try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd');
                 const data = await res.json();
-                bnbUsd = parseFloat(data.price);
+                bnbUsd = data.binancecoin.usd;
             } catch (e) {
                 console.warn('Could not fetch BNB/USD price, showing BNB-denominated price only.');
             }
