@@ -604,23 +604,77 @@
         </p>
     </section>
 
-    <!-- VIEW LIVE PRICE ON DEXSCREENER -->
+    <!-- LIVE PRICE (computed directly from the pool, not dependent on any aggregator) -->
     <div class="referral-section" style="margin-top:30px;">
-        <h3 style="color:#ffd700;">📊 Track $BTM Price</h3>
+        <h3 style="color:#ffd700;">💰 Current $BTM Price</h3>
         <p style="color:#ccc; font-size:1rem;">
-            Our liquidity pool is live on PancakeSwap. View the current price and pool info on DexScreener.
+            Computed live from our PancakeSwap liquidity pool.
         </p>
+        <p id="livePrice" style="font-size:2.4rem; font-weight:800; color:#fff; margin:14px 0 4px;">Loading...</p>
+        <p id="livePriceBnb" style="font-size:1rem; color:#aaa; margin-bottom:14px;"></p>
         <a href="https://dexscreener.com/bsc/0x83268483C084C6FB396d4F900E601295A285DDEF"
            target="_blank" rel="noopener noreferrer"
-           style="display:inline-block; margin-top:12px; padding:12px 28px; border-radius:16px;
-                  background:linear-gradient(135deg,#ffd700,#ffb700); color:#1a1a1a; font-weight:800;
-                  text-decoration:none; font-size:1rem;">
-            📊 View on DexScreener ↗
+           style="display:inline-block; margin-top:6px; padding:10px 24px; border-radius:16px;
+                  background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.4); color:#ffd700; font-weight:700;
+                  text-decoration:none; font-size:0.9rem;">
+            View on DexScreener ↗
         </a>
         <p style="margin-top:12px; font-size:0.85rem; color:#888;">
-            Note: our pool is brand new — it may take a little time to appear after creation.
+            Note: our pool is small and brand new, so it may not appear on every price tracker yet — the price above is read directly from the pool itself and is always accurate.
         </p>
     </div>
+
+    <script>
+    // ---- LIVE PRICE (from pool reserves directly) ----
+    async function fetchLivePrice() {
+        const priceEl = document.getElementById('livePrice');
+        const priceBnbEl = document.getElementById('livePriceBnb');
+        const TOKEN_ADDRESS = '0x1016e99e7013272F00f1EA403016Db4a9550B309';
+        const PAIR_ADDRESS = '0x83268483C084C6FB396d4F900E601295A285DDEF';
+        const RPC_URL = 'https://bsc-dataseed.binance.org/';
+        const PAIR_ABI = [
+            'function getReserves() view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)',
+            'function token0() view returns (address)'
+        ];
+
+        try {
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            const pair = new ethers.Contract(PAIR_ADDRESS, PAIR_ABI, provider);
+            const [reserve0, reserve1] = await pair.getReserves();
+            const token0 = await pair.token0();
+
+            const isBtmToken0 = token0.toLowerCase() === TOKEN_ADDRESS.toLowerCase();
+            const btmReserve = isBtmToken0 ? reserve0 : reserve1;
+            const bnbReserve = isBtmToken0 ? reserve1 : reserve0;
+
+            const priceBnb = parseFloat(ethers.formatEther(bnbReserve)) / parseFloat(ethers.formatEther(btmReserve));
+
+            // Get current BNB/USD price
+            let bnbUsd = null;
+            try {
+                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
+                const data = await res.json();
+                bnbUsd = parseFloat(data.price);
+            } catch (e) {
+                console.warn('Could not fetch BNB/USD price, showing BNB-denominated price only.');
+            }
+
+            if (bnbUsd) {
+                const priceUsd = priceBnb * bnbUsd;
+                priceEl.innerText = `$${priceUsd.toFixed(8)}`;
+                priceBnbEl.innerText = `${priceBnb.toFixed(10)} BNB per BTM`;
+            } else {
+                priceEl.innerText = `${priceBnb.toFixed(10)} BNB`;
+                priceBnbEl.innerText = 'per BTM';
+            }
+        } catch (err) {
+            console.error('Failed to fetch live price:', err);
+            priceEl.innerText = 'Unavailable';
+        }
+    }
+    fetchLivePrice();
+    setInterval(fetchLivePrice, 5 * 60 * 1000);
+    </script>
 
     <!-- HOW TO SEE YOUR $BTM (WALLET IMPORT HELP) -->
     <div class="referral-section" style="margin-top:30px;">
