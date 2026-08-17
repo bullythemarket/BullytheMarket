@@ -818,10 +818,29 @@
     })();
 
     // ---- BURN TRACKER ----
+    // ---- BURN TRACKER (real on-chain data) ----
     async function fetchBurnData() {
-        document.getElementById('burnAmount').innerText = '1,234,567 $BTM';
+        const burnEl = document.getElementById('burnAmount');
+        const TOKEN_ADDRESS = '0x1016e99e7013272F00f1EA403016Db4a9550B309';
+        const DEAD_ADDRESS = '0x000000000000000000000000000000000000dEaD';
+        const RPC_URL = 'https://bsc-dataseed.binance.org/';
+        const ERC20_ABI = ['function balanceOf(address) view returns (uint256)'];
+
+        try {
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            const token = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, provider);
+            const burned = await token.balanceOf(DEAD_ADDRESS);
+            const burnedFormatted = parseFloat(ethers.formatEther(burned)).toLocaleString(undefined, { maximumFractionDigits: 2 });
+            burnEl.innerText = `${burnedFormatted} $BTM`;
+        } catch (err) {
+            console.error('Failed to fetch burn data:', err);
+            burnEl.innerText = 'Unavailable';
+        }
     }
     fetchBurnData();
+    // Re-check periodically so this stays accurate once trading opens
+    // and real burns start accumulating.
+    setInterval(fetchBurnData, 5 * 60 * 1000);
 
     // ---- PRESALE COUNTDOWN (synced to on-chain presaleEndTime) ----
     (function onChainTimer() {
