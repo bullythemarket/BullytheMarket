@@ -565,12 +565,14 @@
 
     <!-- REFERRAL CODE INPUT (FOR USER B) -->
     <div class="referral-section" style="margin-top:0;">
-        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Enter it below to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
+        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Register it with the wallet you'll send BNB from to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:8px;">
             <input type="text" id="referralCodeInput" placeholder="Enter referral code" />
-            <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Apply</button>
+            <input type="text" id="referralWalletInput" placeholder="Your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
+            <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Register</button>
         </div>
         <p id="referralCodeStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+        <p style="margin-top:6px; font-size:0.8rem; color:#666;">Register before sending BNB so your bonus is applied automatically when your transaction is detected.</p>
     </div>
 
     <!-- FARMING / YIELD BOOSTS -->
@@ -814,8 +816,11 @@
         });
     }
 
-    // ---- GENERATE REFERRAL LINK (MANUAL WALLET INPUT) ----
-    document.getElementById('generateBtn').addEventListener('click', function() {
+    // ---- REFERRAL BACKEND ----
+    const REFERRAL_API_BASE = 'https://192-81-209-30.sslip.io';
+
+    // ---- GENERATE REFERRAL LINK (REAL — registers with the backend) ----
+    document.getElementById('generateBtn').addEventListener('click', async function() {
         const walletInput = document.getElementById('walletInput');
         const address = walletInput.value.trim();
         const statusEl = document.getElementById('referralStatus');
@@ -831,15 +836,38 @@
 
         walletInput.classList.remove('error');
         walletInput.classList.add('success');
-        statusEl.textContent = '✅ Generating referral link...';
+        statusEl.textContent = '⏳ Registering your referral code...';
         statusEl.style.color = '#ffd700';
 
         const code = address.slice(2, 8).toUpperCase();
         const baseUrl = window.location.origin + window.location.pathname;
         const link = `${baseUrl}?ref=${code}`;
-        linkEl.textContent = link;
-        statusEl.textContent = '✅ Referral link generated! Share it to earn 5% bonus!';
-        statusEl.style.color = '#ffd700';
+
+        try {
+            const res = await fetch(`${REFERRAL_API_BASE}/register-referrer`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, wallet: address })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                linkEl.textContent = link;
+                statusEl.textContent = '✅ Referral code registered! Share your link to earn 5% bonus.';
+                statusEl.style.color = '#ffd700';
+            } else if (res.status === 409) {
+                linkEl.textContent = link;
+                statusEl.textContent = '✅ This wallet already has a registered code — here\'s your link.';
+                statusEl.style.color = '#ffd700';
+            } else {
+                statusEl.textContent = `❌ ${data.error || 'Something went wrong. Please try again.'}`;
+                statusEl.style.color = '#ff6666';
+            }
+        } catch (err) {
+            console.error('Referral registration failed:', err);
+            statusEl.textContent = '❌ Could not reach the referral server. Please try again in a moment.';
+            statusEl.style.color = '#ff6666';
+        }
     });
 
     // ---- COPY REFERRAL LINK ----
@@ -855,28 +883,57 @@
         });
     }
 
-    // ---- APPLY REFERRAL CODE (FOR USER B) ----
-    function applyReferralCode() {
-        const input = document.getElementById('referralCodeInput');
-        const code = input.value.trim().toUpperCase();
-        if (code.length >= 4) {
-            localStorage.setItem('btm_referral_applied', code);
-            document.getElementById('referralCodeStatus').textContent = `✅ Referral code "${code}" applied! You get 10% bonus.`;
-            document.getElementById('referralCodeStatus').style.color = '#ffd700';
-        } else {
-            document.getElementById('referralCodeStatus').textContent = '❌ Please enter a valid code (4+ characters).';
-            document.getElementById('referralCodeStatus').style.color = '#ff6666';
+    // ---- APPLY REFERRAL CODE (FOR USER B — REAL, registers with backend) ----
+    async function applyReferralCode() {
+        const codeInput = document.getElementById('referralCodeInput');
+        const walletInput = document.getElementById('referralWalletInput');
+        const code = codeInput.value.trim().toUpperCase();
+        const wallet = walletInput.value.trim();
+        const statusEl = document.getElementById('referralCodeStatus');
+
+        if (code.length < 4) {
+            statusEl.textContent = '❌ Please enter a valid code (4+ characters).';
+            statusEl.style.color = '#ff6666';
+            return;
+        }
+        if (!wallet || !wallet.startsWith('0x') || wallet.length !== 42) {
+            statusEl.textContent = '❌ Please enter the wallet address you\'ll send BNB from.';
+            statusEl.style.color = '#ff6666';
+            return;
+        }
+
+        statusEl.textContent = '⏳ Registering...';
+        statusEl.style.color = '#ffd700';
+
+        try {
+            const res = await fetch(`${REFERRAL_API_BASE}/register-usage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, wallet })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                statusEl.textContent = '✅ Registered! Send BNB from this exact wallet to get your 10% bonus automatically.';
+                statusEl.style.color = '#ffd700';
+            } else {
+                statusEl.textContent = `❌ ${data.error || 'Something went wrong. Please try again.'}`;
+                statusEl.style.color = '#ff6666';
+            }
+        } catch (err) {
+            console.error('Referral usage registration failed:', err);
+            statusEl.textContent = '❌ Could not reach the referral server. Please try again in a moment.';
+            statusEl.style.color = '#ff6666';
         }
     }
 
-    // ---- CHECK URL FOR REFERRAL CODE ----
+    // ---- CHECK URL FOR REFERRAL CODE (pre-fills only — real registration still requires entering a wallet) ----
     (function checkURL() {
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref');
         if (ref) {
             document.getElementById('referralCodeInput').value = ref;
-            localStorage.setItem('btm_referral_applied', ref);
-            document.getElementById('referralCodeStatus').textContent = `✅ Referral code "${ref}" auto-applied! You get 10% bonus.`;
+            document.getElementById('referralCodeStatus').textContent = `Referral code "${ref}" pre-filled — enter your wallet address above and click Register to apply your bonus.`;
             document.getElementById('referralCodeStatus').style.color = '#ffd700';
         }
     })();
