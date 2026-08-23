@@ -439,7 +439,28 @@
             <a href="https://t.me/btmfans" target="_blank" class="btn-secondary" style="display:inline-block; text-decoration:none;">💬 Community</a>
         </div>
     </section>
+    <!-- STAKING -->
+    <div class="farming-section">
+        <h3 style="color:#ffd700;">🔒 Staking</h3>
+        <p style="color:#ccc; font-size:1rem;">Lock your own $BTM in the staking contract to earn additional $BTM over time.</p>
+        <p style="color:#888; font-size:0.9rem;">Staking requires your own tokens — it doesn't create new tokens or liquidity, it rewards holders who choose to lock what they already own.</p>
+        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Deployed on-chain, currently inactive. Reward rate will be set once a broader holder base exists, calculated deliberately from real circulating supply — not a fixed promise made in advance.</p>
+    </div>
 
+    <!-- FARMING / YIELD BOOSTS -->
+    <div class="farming-section">
+        <h3 style="color:#ffd700;">🌾 Farming</h3>
+        <p style="color:#ccc; font-size:1rem;">Add your own BNB + $BTM to the PancakeSwap liquidity pool, then stake the LP tokens you receive to earn $BTM.</p>
+        <p style="color:#888; font-size:0.9rem;">Farming rewards liquidity providers — it requires you to bring real capital to the pool first. It's not a way to earn without providing liquidity yourself, and it doesn't generate liquidity on its own.</p>
+        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Deployed on-chain, currently inactive. Same responsible activation approach as staking — no fixed reward multiplier promised in advance.</p>
+    </div>
+
+    <!-- LIQUIDITY POOL EXPLAINER -->
+    <div class="farming-section">
+        <h3 style="color:#ffd700;">💧 How the liquidity pool works</h3>
+        <p style="color:#ccc; font-size:1rem;">The liquidity pool holds both BNB and $BTM. When someone buys, they send BNB in and receive $BTM out — when someone sells, the reverse. The pool is what makes trading possible without needing another person on the other side of every trade.</p>
+        <p style="color:#888; font-size:0.9rem;">Pool depth directly determines trade size an investor can make without significant price impact. Growing this pool — through presale proceeds, trading fees, and eventually community-provided liquidity via farming — is an ongoing priority, not a one-time event.</p>
+    </div>
     <!-- PRICE WIDGET -->
     <div class="price-widget">
         <iframe
@@ -547,114 +568,6 @@
         </div>
     </div>
 
-    <!-- REFERRAL PROGRAM (FOR USER A) -->
-    <div class="referral-section">
-        <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
-        <p style="color:#aaa; font-size:0.95rem;">Enter your wallet address to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <input type="text" id="walletInput" placeholder="Enter your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
-            <button id="generateBtn" class="btn-generate">Generate Referral Link</button>
-        </div>
-        <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
-        <div id="referralLink" class="referral-link-display">Enter wallet address above</div>
-        <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
-            <button onclick="copyReferralLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">📋 Copy Link</button>
-        </div>
-        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-    </div>
-
-    <!-- REFERRAL CODE INPUT (FOR USER B) -->
-    <div class="referral-section" style="margin-top:0;">
-        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Register it with the wallet you'll send BNB from to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:8px;">
-            <input type="text" id="referralCodeInput" placeholder="Enter referral code" />
-            <input type="text" id="referralWalletInput" placeholder="Your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
-            <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Register</button>
-        </div>
-        <p id="referralCodeStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-        <p style="margin-top:6px; font-size:0.8rem; color:#666;">Register before sending BNB so your bonus is applied automatically when your transaction is detected.</p>
-    </div>
-
-    <!-- CLAIM REFERRER BONUS -->
-    <div class="referral-section" style="margin-top:0;">
-        <h3 style="color:#ffd700;">💰 Claim Your Referral Bonus</h3>
-        <p style="color:#aaa; font-size:0.95rem;">If people you've referred have completed purchases, your 5% bonus is waiting — choose your wallet to check and claim it.</p>
-        <p style="color:#ffb700; font-size:0.85rem; margin-top:4px;">⛽ Note: you'll need a small amount of BNB in this wallet (just a few cents worth) to cover the network fee for claiming — the bonus itself is separate from this.</p>
-
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0;">
-            <button onclick="connectSpecificWallet('metamask')" class="btn-secondary" style="padding:10px 20px;">🦊 MetaMask</button>
-            <button onclick="connectSpecificWallet('trust')" class="btn-secondary" style="padding:10px 20px;">🛡️ Trust Wallet</button>
-            <button onclick="connectSpecificWallet('coinbase')" class="btn-secondary" style="padding:10px 20px;">🔵 Coinbase Wallet App</button>
-        </div>
-        <p style="color:#666; font-size:0.75rem;">Note: "Coinbase Wallet" (the app) is a separate self-custody product from the main Coinbase exchange — this connects to the wallet app specifically, which supports BNB Chain tokens like $BTM.</p>
-        <p style="color:#888; font-size:0.85rem; margin-top:12px;">Using a different wallet? This works for any wallet app with a built-in browser:</p>
-        <button onclick="copyPageLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.85rem; margin-top:4px;">📋 Copy This Page's Link</button>
-        <p style="color:#666; font-size:0.8rem; margin-top:6px;">Then open your wallet app, find its built-in browser, and paste the link there.</p>
-        <p id="copyLinkStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
-
-        <p id="bonusBalanceDisplay" style="color:#ffd700; font-size:1.3rem; font-weight:700; margin:16px 0 4px;"></p>
-        <p style="color:#888; font-size:0.8rem; margin-bottom:6px;">⛽ You'll need a small amount of BNB in this wallet to cover the network fee (usually under $0.01) — the claim itself is free, but a tiny gas fee is required to send any transaction.</p>
-        <button id="claimBonusBtn" onclick="claimReferrerBonusOnChain()" class="btn-generate" style="display:none; margin-top:8px;">Claim Bonus</button>
-        <p id="claimStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-
-        <p style="margin-top:12px; font-size:0.8rem; color:#666;">You must claim manually — this protects every other investor's purchase from being affected by any issue with a referrer's wallet. Your bonus sits safely in the contract until you claim it; there's no deadline.</p>
-    </div>
-
-    <!-- STAKING -->
-    <div class="farming-section">
-        <h3 style="color:#ffd700;">🔒 Staking</h3>
-        <p style="color:#ccc; font-size:1rem;">Lock your own $BTM in the staking contract to earn additional $BTM over time.</p>
-        <p style="color:#888; font-size:0.9rem;">Staking requires your own tokens — it doesn't create new tokens or liquidity, it rewards holders who choose to lock what they already own.</p>
-        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Deployed on-chain, currently inactive. Reward rate will be set once a broader holder base exists, calculated deliberately from real circulating supply — not a fixed promise made in advance.</p>
-    </div>
-
-    <!-- FARMING / YIELD BOOSTS -->
-    <div class="farming-section">
-        <h3 style="color:#ffd700;">🌾 Farming</h3>
-        <p style="color:#ccc; font-size:1rem;">Add your own BNB + $BTM to the PancakeSwap liquidity pool, then stake the LP tokens you receive to earn $BTM.</p>
-        <p style="color:#888; font-size:0.9rem;">Farming rewards liquidity providers — it requires you to bring real capital to the pool first. It's not a way to earn without providing liquidity yourself, and it doesn't generate liquidity on its own.</p>
-        <p style="color:#888; font-size:0.85rem; margin-top:8px;">🔒 Deployed on-chain, currently inactive. Same responsible activation approach as staking — no fixed reward multiplier promised in advance.</p>
-    </div>
-
-    <!-- LIQUIDITY POOL EXPLAINER -->
-    <div class="farming-section">
-        <h3 style="color:#ffd700;">💧 How the liquidity pool works</h3>
-        <p style="color:#ccc; font-size:1rem;">The liquidity pool holds both BNB and $BTM. When someone buys, they send BNB in and receive $BTM out — when someone sells, the reverse. The pool is what makes trading possible without needing another person on the other side of every trade.</p>
-        <p style="color:#888; font-size:0.9rem;">Pool depth directly determines trade size an investor can make without significant price impact. Growing this pool — through presale proceeds, trading fees, and eventually community-provided liquidity via farming — is an ongoing priority, not a one-time event.</p>
-    </div>
-
-    <!-- PRESALE BOX -->
-    <section id="presale" class="presale-box">
-        <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
-            🔥 Presale <span class="gold-text">Live</span>
-        </h2>
-        <p style="color:#aaa; margin-bottom:8px;">Secure your $BTM before the public launch.</p>
-        <div class="timer" id="countdown">14d 00h 00m 00s</div>
-        <div class="rate">202,700 $BTM per 1 BNB</div>
-        <div class="cap">🔥 Presale Cap: 50 BNB</div>
-
-        <div class="instruction">
-            <strong style="color:#ffd700;">How to participate:</strong>
-            <ul>
-                <li>Copy the address below</li>
-                <li>Send BNB (0.01 – 5 BNB) from your wallet</li>
-                <li>Tokens are sent to you automatically</li>
-            </ul>
-        </div>
-
-        <div class="address-row">
-            <code id="wallet-address">0xC073636C343F254c53EeE3F8167731CaD2365d53</code>
-            <button onclick="copyAddress()">📋 Copy</button>
-        </div>
-        <div class="minmax">
-            <span>Min: 0.01 BNB</span>
-            <span>Max: 5 BNB</span>
-            <span>🔒 Liquidity locked</span>
-        </div>
-        <p style="margin-top:16px; font-size:0.9rem; color:#888;">
-            ✅ Automatic allocation — send any amount, receive proportional tokens.
-        </p>
-    </section>
 
     <!-- LIVE PRICE (computed directly from the pool, not dependent on any aggregator) -->
     <div class="referral-section" style="margin-top:30px;">
@@ -728,33 +641,73 @@
     setInterval(fetchLivePrice, 5 * 60 * 1000);
     </script>
 
+    <!-- PRESALE BOX -->
+    <section id="presale" class="presale-box">
+        <h2 style="font-family:'Bebas Neue',sans-serif; font-size:2.2rem; margin-bottom:4px;">
+            🔥 Presale <span class="gold-text">Live</span>
+        </h2>
+        <p style="color:#aaa; margin-bottom:8px;">Secure your $BTM before the public launch.</p>
+        <div class="timer" id="countdown">14d 00h 00m 00s</div>
+        <div class="rate">202,700 $BTM per 1 BNB</div>
+        <div class="cap">🔥 Presale Cap: 50 BNB</div>
+
+        <div class="instruction">
+            <strong style="color:#ffd700;">How to participate:</strong>
+            <ul>
+                <li>Copy the address below</li>
+                <li>Send BNB (0.01 – 5 BNB) from your wallet</li>
+                <li>Tokens are sent to you automatically</li>
+            </ul>
+        </div>
+
+        <div class="address-row">
+            <code id="wallet-address">0xC073636C343F254c53EeE3F8167731CaD2365d53</code>
+            <button onclick="copyAddress()">📋 Copy</button>
+        </div>
+        <div class="minmax">
+            <span>Min: 0.01 BNB</span>
+            <span>Max: 5 BNB</span>
+            <span>🔒 Liquidity locked</span>
+        </div>
+        <p style="margin-top:16px; font-size:0.9rem; color:#888;">
+            ✅ Automatic allocation — send any amount, receive proportional tokens.
+        </p>
+    </section>
     <!-- HOW TO SEE YOUR $BTM (WALLET IMPORT HELP) -->
     <div class="referral-section" style="margin-top:30px;">
         <h3 style="color:#ffd700;">👛 Don't See Your $BTM Yet?</h3>
 
-        <p style="color:#ccc; font-size:1rem;">
-            If you're using MetaMask or another browser-extension wallet, click below to add $BTM automatically — including the logo, no manual steps needed:
-        </p>
-        <button onclick="addBtmToWallet()" style="display:inline-block; margin:12px 0; padding:12px 28px; border-radius:16px;
-                  background:linear-gradient(135deg,#ffd700,#ffb700); color:#1a1a1a; font-weight:800;
-                  text-decoration:none; font-size:1rem; border:none; cursor:pointer;">
-            🦊 Add BTM to Wallet
-        </button>
-        <p id="addWalletStatus" style="margin-top:4px; color:#888; font-size:0.9rem;"></p>
+        <!-- PRIMARY: Automatic method, visually prominent -->
+        <div style="max-width:560px; margin:16px auto; padding:20px; border:2px solid #ffd700; border-radius:16px; background:rgba(255,215,0,0.06);">
+            <p style="color:#ffd700; font-weight:800; font-size:1rem; margin-bottom:8px;">✅ RECOMMENDED — One click, logo included automatically</p>
+            <p style="color:#ddd; font-size:0.95rem; margin-bottom:14px;">
+                Works with MetaMask, Trust Wallet, Coinbase Wallet, and most browser-extension or in-app wallets. This is the only method that adds the correct logo automatically — no extra steps, no hunting for an image field.
+            </p>
+            <button onclick="addBtmToWallet()" style="display:inline-block; padding:14px 32px; border-radius:16px;
+                      background:linear-gradient(135deg,#ffd700,#ffb700); color:#1a1a1a; font-weight:800;
+                      text-decoration:none; font-size:1.05rem; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(255,215,0,0.3);">
+                🦊 Add BTM to Wallet (Automatic)
+            </button>
+            <p id="addWalletStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+        </div>
 
-        <p style="color:#ccc; font-size:1rem; margin-top:24px;">
-            On mobile, or if the button above doesn't work for your wallet, add it manually — it only takes a minute (note: manual imports typically won't show the logo, only the automatic method above does):
-        </p>
+        <!-- SECONDARY: Manual fallback, clearly de-emphasized -->
+        <div style="max-width:560px; margin:20px auto 0; padding:16px; border:1px solid #444; border-radius:12px; opacity:0.85;">
+            <p style="color:#ffaa33; font-weight:700; font-size:0.9rem; margin-bottom:6px;">⚠️ Only use manual entry if the button above doesn't work for your wallet</p>
+            <p style="color:#999; font-size:0.85rem; margin-bottom:10px;">
+                Manual entry will <strong>not</strong> show the logo — your wallet has no way to know what BTM looks like unless you use the automatic method above.
+            </p>
 
-        <div style="text-align:left; max-width:560px; margin:16px auto;">
-            <strong style="color:#ffd700;">Works the same way in MetaMask, Trust Wallet, SafePal, OKX Wallet, Coinbase Wallet, TokenPocket, and most self-custody wallets:</strong>
-            <ul style="margin-top:8px; color:#bbb; padding-left:20px;">
-                <li>Make sure your wallet is set to <strong style="color:#ffd700;">BNB Smart Chain (BSC)</strong></li>
-                <li>Find "Add Token" / "Import Token" / "Add Custom Token" in your wallet</li>
-                <li>Paste the contract address below</li>
-                <li>Symbol (BTM) and decimals (18) should autofill</li>
-                <li>Confirm — your balance will appear</li>
-            </ul>
+            <div style="text-align:left; color:#999; font-size:0.85rem;">
+                <strong style="color:#ccc;">If you must add it manually:</strong>
+                <ul style="margin-top:8px; padding-left:20px;">
+                    <li>Make sure your wallet is set to <strong>BNB Smart Chain (BSC)</strong></li>
+                    <li>Find "Add Token" / "Import Token" / "Add Custom Token" in your wallet</li>
+                    <li>Paste the contract address below</li>
+                    <li>Symbol (BTM) and decimals (18) should autofill</li>
+                    <li>Confirm — your balance will appear, without a logo</li>
+                </ul>
+            </div>
         </div>
 
         <div class="address-row">
@@ -774,6 +727,60 @@
             </span>
         </div>
     </div>
+    <!-- REFERRAL PROGRAM (FOR USER A) -->
+    <div class="referral-section">
+        <h3 style="color:#ffd700;">🚀 Referral Program (Referrer)</h3>
+        <p style="color:#aaa; font-size:0.95rem;">Enter your wallet address to generate your unique referral link and earn <strong style="color:#ffd700;">5% bonus $BTM</strong>!</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
+            <input type="text" id="walletInput" placeholder="Enter your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
+            <button id="generateBtn" class="btn-generate">Generate Referral Link</button>
+        </div>
+        <p style="color:#888; font-size:0.85rem;">Your referral link:</p>
+        <div id="referralLink" class="referral-link-display">Enter wallet address above</div>
+        <div style="margin-top:12px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
+            <button onclick="copyReferralLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">📋 Copy Link</button>
+        </div>
+        <p id="referralStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+    </div>
+
+    <!-- REFERRAL CODE INPUT (FOR USER B) -->
+    <div class="referral-section" style="margin-top:0;">
+        <p style="color:#aaa; font-size:0.95rem;">Have a referral code? Register it with the wallet you'll send BNB from to get <strong style="color:#ffd700;">10% bonus</strong>:</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:8px;">
+            <input type="text" id="referralCodeInput" placeholder="Enter referral code" />
+            <input type="text" id="referralWalletInput" placeholder="Your wallet address (0x...)" style="flex:1; min-width:200px; background:#1a1a1a; border:1px solid #333; color:#fff; padding:10px 16px; border-radius:40px;" />
+            <button onclick="applyReferralCode()" class="btn-secondary" style="padding:8px 20px; font-size:0.9rem;">Register</button>
+        </div>
+        <p id="referralCodeStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+        <p style="margin-top:6px; font-size:0.8rem; color:#666;">Register before sending BNB so your bonus is applied automatically when your transaction is detected.</p>
+    </div>
+
+    <!-- CLAIM REFERRER BONUS -->
+    <div class="referral-section" style="margin-top:0;">
+        <h3 style="color:#ffd700;">💰 Claim Your Referral Bonus</h3>
+        <p style="color:#aaa; font-size:0.95rem;">If people you've referred have completed purchases, your 5% bonus is waiting — choose your wallet to check and claim it.</p>
+        <p style="color:#ffb700; font-size:0.85rem; margin-top:4px;">⛽ Note: you'll need a small amount of BNB in this wallet (just a few cents worth) to cover the network fee for claiming — the bonus itself is separate from this.</p>
+
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0;">
+            <button onclick="connectSpecificWallet('metamask')" class="btn-secondary" style="padding:10px 20px;">🦊 MetaMask</button>
+            <button onclick="connectSpecificWallet('trust')" class="btn-secondary" style="padding:10px 20px;">🛡️ Trust Wallet</button>
+            <button onclick="connectSpecificWallet('coinbase')" class="btn-secondary" style="padding:10px 20px;">🔵 Coinbase Wallet App</button>
+        </div>
+        <p style="color:#666; font-size:0.75rem;">Note: "Coinbase Wallet" (the app) is a separate self-custody product from the main Coinbase exchange — this connects to the wallet app specifically, which supports BNB Chain tokens like $BTM.</p>
+        <p style="color:#888; font-size:0.85rem; margin-top:12px;">Using a different wallet? This works for any wallet app with a built-in browser:</p>
+        <button onclick="copyPageLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.85rem; margin-top:4px;">📋 Copy This Page's Link</button>
+        <p style="color:#666; font-size:0.8rem; margin-top:6px;">Then open your wallet app, find its built-in browser, and paste the link there.</p>
+        <p id="copyLinkStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
+
+        <p id="bonusBalanceDisplay" style="color:#ffd700; font-size:1.3rem; font-weight:700; margin:16px 0 4px;"></p>
+        <p style="color:#888; font-size:0.8rem; margin-bottom:6px;">⛽ You'll need a small amount of BNB in this wallet to cover the network fee (usually under $0.01) — the claim itself is free, but a tiny gas fee is required to send any transaction.</p>
+        <button id="claimBonusBtn" onclick="claimReferrerBonusOnChain()" class="btn-generate" style="display:none; margin-top:8px;">Claim Bonus</button>
+        <p id="claimStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
+
+        <p style="margin-top:12px; font-size:0.8rem; color:#666;">You must claim manually — this protects every other investor's purchase from being affected by any issue with a referrer's wallet. Your bonus sits safely in the contract until you claim it; there's no deadline.</p>
+    </div>
+
+
 
     <footer class="footer">
         <span>© 2025 $BTM – Bully the Market</span>
