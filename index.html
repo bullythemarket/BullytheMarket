@@ -579,6 +579,7 @@
     <div class="referral-section" style="margin-top:0;">
         <h3 style="color:#ffd700;">💰 Claim Your Referral Bonus</h3>
         <p style="color:#aaa; font-size:0.95rem;">If people you've referred have completed purchases, your 5% bonus is waiting — choose your wallet to check and claim it.</p>
+        <p style="color:#ffb700; font-size:0.85rem; margin-top:4px;">⛽ Note: you'll need a small amount of BNB in this wallet (just a few cents worth) to cover the network fee for claiming — the bonus itself is separate from this.</p>
 
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0;">
             <button onclick="connectSpecificWallet('metamask')" class="btn-secondary" style="padding:10px 20px;">🦊 MetaMask</button>
@@ -592,6 +593,7 @@
         <p id="copyLinkStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
 
         <p id="bonusBalanceDisplay" style="color:#ffd700; font-size:1.3rem; font-weight:700; margin:16px 0 4px;"></p>
+        <p style="color:#888; font-size:0.8rem; margin-bottom:6px;">⛽ You'll need a small amount of BNB in this wallet to cover the network fee (usually under $0.01) — the claim itself is free, but a tiny gas fee is required to send any transaction.</p>
         <button id="claimBonusBtn" onclick="claimReferrerBonusOnChain()" class="btn-generate" style="display:none; margin-top:8px;">Claim Bonus</button>
         <p id="claimStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
 
