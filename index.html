@@ -578,28 +578,22 @@
     <!-- CLAIM REFERRER BONUS -->
     <div class="referral-section" style="margin-top:0;">
         <h3 style="color:#ffd700;">💰 Claim Your Referral Bonus</h3>
-        <p style="color:#aaa; font-size:0.95rem;">If people you've referred have completed purchases, your 5% bonus is waiting — connect your wallet to check and claim it.</p>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:12px 0;">
-            <button id="checkBonusBtn" onclick="checkReferrerBonus()" class="btn-secondary" style="padding:10px 24px;">Connect Wallet & Check Balance</button>
+        <p style="color:#aaa; font-size:0.95rem;">If people you've referred have completed purchases, your 5% bonus is waiting — choose your wallet to check and claim it.</p>
+
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:12px 0;">
+            <button onclick="connectSpecificWallet('metamask')" class="btn-secondary" style="padding:10px 20px;">🦊 MetaMask</button>
+            <button onclick="connectSpecificWallet('trust')" class="btn-secondary" style="padding:10px 20px;">🛡️ Trust Wallet</button>
+            <button onclick="connectSpecificWallet('coinbase')" class="btn-secondary" style="padding:10px 20px;">🔵 Coinbase Wallet App</button>
         </div>
-        <p id="bonusBalanceDisplay" style="color:#ffd700; font-size:1.3rem; font-weight:700; margin:12px 0 4px;"></p>
+        <p style="color:#666; font-size:0.75rem;">Note: "Coinbase Wallet" (the app) is a separate self-custody product from the main Coinbase exchange — this connects to the wallet app specifically, which supports BNB Chain tokens like $BTM.</p>
+        <p style="color:#888; font-size:0.85rem; margin-top:12px;">Using a different wallet? This works for any wallet app with a built-in browser:</p>
+        <button onclick="copyPageLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.85rem; margin-top:4px;">📋 Copy This Page's Link</button>
+        <p style="color:#666; font-size:0.8rem; margin-top:6px;">Then open your wallet app, find its built-in browser, and paste the link there.</p>
+        <p id="copyLinkStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
+
+        <p id="bonusBalanceDisplay" style="color:#ffd700; font-size:1.3rem; font-weight:700; margin:16px 0 4px;"></p>
         <button id="claimBonusBtn" onclick="claimReferrerBonusOnChain()" class="btn-generate" style="display:none; margin-top:8px;">Claim Bonus</button>
         <p id="claimStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
-
-        <!-- Shown only if no wallet was detected in the current browser -->
-        <div id="walletPickerSection" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid #333;">
-            <p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">No wallet detected in this browser. Open this page directly inside your wallet app instead:</p>
-            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
-                <button onclick="openInWallet('metamask')" class="btn-secondary" style="padding:8px 16px; font-size:0.85rem;">🦊 MetaMask</button>
-                <button onclick="openInWallet('trust')" class="btn-secondary" style="padding:8px 16px; font-size:0.85rem;">🛡️ Trust Wallet</button>
-                <button onclick="openInWallet('coinbase')" class="btn-secondary" style="padding:8px 16px; font-size:0.85rem;">🔵 Coinbase Wallet App</button>
-            </div>
-            <p style="color:#666; font-size:0.75rem; margin-top:6px;">Note: "Coinbase Wallet" (the app) is a separate self-custody product from the main Coinbase exchange — this button opens the wallet app specifically, which supports BNB Chain tokens like $BTM.</p>
-            <p style="color:#888; font-size:0.85rem; margin-top:14px;">Using a different wallet? This works for any wallet app with a built-in browser:</p>
-            <button onclick="copyPageLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.85rem; margin-top:4px;">📋 Copy This Page's Link</button>
-            <p style="color:#666; font-size:0.8rem; margin-top:6px;">Then open your wallet app, find its built-in browser, and paste the link there.</p>
-            <p id="copyLinkStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
-        </div>
 
         <p style="margin-top:12px; font-size:0.8rem; color:#666;">You must claim manually — this protects every other investor's purchase from being affected by any issue with a referrer's wallet. Your bonus sits safely in the contract until you claim it; there's no deadline.</p>
     </div>
@@ -1065,23 +1059,39 @@
 
     let connectedWalletAddress = null;
 
-    async function checkReferrerBonus() {
+    // Identifying flags each wallet's provider sets, used to detect whether
+    // the specific wallet the user picked is already available in this browser
+    const WALLET_FLAGS = {
+        metamask: 'isMetaMask',
+        trust: 'isTrust',
+        coinbase: 'isCoinbaseWallet'
+    };
+
+    const DEEP_LINKS = {
+        metamask: (bareUrl) => `https://metamask.app.link/dapp/${bareUrl}`,
+        trust: (encodedUrl) => `https://link.trustwallet.com/open_url?coin_id=714&url=${encodedUrl}`, // 714 = BNB Smart Chain (SLIP-44)
+        coinbase: (encodedUrl) => `https://go.cb-w.com/dapp?cb_url=${encodedUrl}`
+    };
+
+    async function connectSpecificWallet(walletName) {
         const statusEl = document.getElementById('claimStatus');
         const balanceEl = document.getElementById('bonusBalanceDisplay');
         const claimBtn = document.getElementById('claimBonusBtn');
-        const pickerEl = document.getElementById('walletPickerSection');
 
-        if (typeof window.ethereum === 'undefined') {
-            // No wallet in this browser - show the wallet-opening options
-            // instead of just an error message.
-            pickerEl.style.display = 'block';
-            statusEl.textContent = '';
+        const flag = WALLET_FLAGS[walletName];
+        const walletAvailable = typeof window.ethereum !== 'undefined' && window.ethereum[flag] === true;
+
+        if (!walletAvailable) {
+            // That specific wallet isn't available in this browser - open it directly instead
+            const pageUrl = window.location.href;
+            const encodedUrl = encodeURIComponent(pageUrl);
+            const bareUrl = pageUrl.replace(/^https?:\/\//, '');
+            window.location.href = DEEP_LINKS[walletName](walletName === 'metamask' ? bareUrl : encodedUrl);
             return;
         }
 
-        pickerEl.style.display = 'none';
-
         try {
+            statusEl.textContent = '';
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             connectedWalletAddress = accounts[0];
 
@@ -1103,28 +1113,13 @@
             }
         } catch (err) {
             console.error('Failed to check referrer bonus:', err);
-            statusEl.textContent = '❌ Could not check your balance. Please try again.';
+            if (err.code === -32002) {
+                statusEl.textContent = '⚠️ Your wallet already has a connection request open — check your wallet extension/app for a pending popup and approve or dismiss it, then try again.';
+            } else {
+                statusEl.textContent = '❌ Could not check your balance. Please try again.';
+            }
             statusEl.style.color = '#ff6666';
         }
-    }
-
-    function openInWallet(walletName) {
-        const pageUrl = window.location.href;
-        const encodedUrl = encodeURIComponent(pageUrl);
-        const bareUrl = pageUrl.replace(/^https?:\/\//, '');
-
-        let deepLink;
-        if (walletName === 'metamask') {
-            deepLink = `https://metamask.app.link/dapp/${bareUrl}`;
-        } else if (walletName === 'trust') {
-            // coin_id 714 = BNB Smart Chain (SLIP-44 standard)
-            deepLink = `https://link.trustwallet.com/open_url?coin_id=714&url=${encodedUrl}`;
-        } else if (walletName === 'coinbase') {
-            deepLink = `https://go.cb-w.com/dapp?cb_url=${encodedUrl}`;
-        } else {
-            return;
-        }
-        window.location.href = deepLink;
     }
 
     async function copyPageLink() {
