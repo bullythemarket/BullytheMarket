@@ -508,7 +508,14 @@
     <div class="burn-tracker">
         <h3 style="font-size:1.4rem; color:#ffd700;">🔥 Total Burned</h3>
         <p id="burnAmount" style="font-size:2rem; font-weight:700; color:#fff;">Loading...</p>
-        <p style="color:#888; font-size:0.9rem;">Tokens burned permanently from supply</p>
+        <p style="color:#888; font-size:0.9rem;">$BTM tokens burned permanently from supply (via sell tax)</p>
+    </div>
+
+    <!-- LP BURN TRACKER (liquidity lock) -->
+    <div class="burn-tracker">
+        <h3 style="font-size:1.4rem; color:#ffd700;">🔒 Liquidity Locked</h3>
+        <p id="lpBurnAmount" style="font-size:2rem; font-weight:700; color:#fff;">Loading...</p>
+        <p style="color:#888; font-size:0.9rem;">LP tokens permanently burned — this liquidity can never be withdrawn by anyone, including the founder</p>
     </div>
 
     <!-- ROADMAP -->
@@ -667,7 +674,7 @@
         <div class="minmax">
             <span>Min: 0.01 BNB</span>
             <span>Max: 5 BNB</span>
-            <span>🔒 Liquidity locked</span>
+            <span id="liquidityLockBadge">Checking liquidity lock...</span>
         </div>
         <p style="margin-top:16px; font-size:0.9rem; color:#888;">
             ✅ Automatic allocation — send any amount, receive proportional tokens.
@@ -1058,6 +1065,54 @@
     // Re-check periodically so this stays accurate once trading opens
     // and real burns start accumulating.
     setInterval(fetchBurnData, 5 * 60 * 1000);
+
+    // ---- LP BURN TRACKER (liquidity lock - separate from token burns above) ----
+    async function fetchLpBurnData() {
+        const lpBurnEl = document.getElementById('lpBurnAmount');
+        const PAIR_ADDRESS = '0x83268483C084C6FB396d4F900E601295A285DDEF'; // the LP token itself
+        const DEAD_ADDRESS = '0x000000000000000000000000000000000000dEaD';
+        const RPC_URL = 'https://bsc-dataseed.binance.org/';
+        const LP_ABI = [
+            'function balanceOf(address) view returns (uint256)',
+            'function totalSupply() view returns (uint256)'
+        ];
+
+        try {
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            const lpToken = new ethers.Contract(PAIR_ADDRESS, LP_ABI, provider);
+            const [burnedLp, totalLp] = await Promise.all([
+                lpToken.balanceOf(DEAD_ADDRESS),
+                lpToken.totalSupply()
+            ]);
+
+            const burnedFormatted = parseFloat(ethers.formatEther(burnedLp));
+            const totalFormatted = parseFloat(ethers.formatEther(totalLp));
+            const pct = totalFormatted > 0 ? (burnedFormatted / totalFormatted * 100) : 0;
+
+            if (burnedFormatted > 0) {
+                lpBurnEl.innerText = `${pct.toFixed(1)}% of LP burned`;
+            } else {
+                lpBurnEl.innerText = 'Not yet locked';
+                lpBurnEl.style.color = '#ff6666';
+            }
+
+            // Also drive the presale box's badge from this same real data
+            const lockBadge = document.getElementById('liquidityLockBadge');
+            if (lockBadge) {
+                if (burnedFormatted > 0) {
+                    lockBadge.innerText = '🔒 Liquidity locked (burned)';
+                } else {
+                    lockBadge.innerText = '⚠️ Liquidity not yet locked';
+                    lockBadge.style.color = '#ff6666';
+                }
+            }
+        } catch (err) {
+            console.error('Failed to fetch LP burn data:', err);
+            lpBurnEl.innerText = 'Unavailable';
+        }
+    }
+    fetchLpBurnData();
+    setInterval(fetchLpBurnData, 5 * 60 * 1000);
 
     // ---- CLAIM REFERRER BONUS ----
     const CLAIM_PRESALE_ADDRESS = '0xb03A51dC8f91C25729f15E686A3df281AC522B52';
