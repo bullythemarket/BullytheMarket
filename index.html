@@ -1095,6 +1095,40 @@
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             connectedWalletAddress = accounts[0];
 
+            // Make sure the wallet is actually on BNB Smart Chain before
+            // attempting any contract calls - this is the #1 cause of
+            // silent failures with BSC dApps, since most wallets default
+            // to Ethereum Mainnet.
+            const BSC_CHAIN_ID = '0x38'; // 56 in hex
+            const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+
+            if (currentChainId !== BSC_CHAIN_ID) {
+                statusEl.textContent = 'Switching to BNB Smart Chain...';
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: BSC_CHAIN_ID }],
+                    });
+                } catch (switchError) {
+                    // Chain not added to this wallet yet - add it, then switch
+                    if (switchError.code === 4902) {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BSC_CHAIN_ID,
+                                chainName: 'BNB Smart Chain',
+                                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                                rpcUrls: ['https://bsc-dataseed1.binance.org'],
+                                blockExplorerUrls: ['https://bscscan.com'],
+                            }],
+                        });
+                    } else {
+                        throw switchError;
+                    }
+                }
+                statusEl.textContent = '';
+            }
+
             const browserProvider = new ethers.BrowserProvider(window.ethereum);
             const presaleRead = new ethers.Contract(CLAIM_PRESALE_ADDRESS, CLAIM_ABI, browserProvider);
 
@@ -1115,8 +1149,10 @@
             console.error('Failed to check referrer bonus:', err);
             if (err.code === -32002) {
                 statusEl.textContent = '⚠️ Your wallet already has a connection request open — check your wallet extension/app for a pending popup and approve or dismiss it, then try again.';
+            } else if (err.code === 4001) {
+                statusEl.textContent = '⚠️ Request was rejected. If you were asked to switch to BNB Smart Chain, please approve that to continue.';
             } else {
-                statusEl.textContent = '❌ Could not check your balance. Please try again.';
+                statusEl.textContent = `❌ Could not check your balance (${err.shortMessage || err.message || 'unknown error'}). Please try again, and make sure your wallet is set to BNB Smart Chain.`;
             }
             statusEl.style.color = '#ff6666';
         }
