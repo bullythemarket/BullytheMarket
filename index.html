@@ -688,13 +688,16 @@
         <div style="max-width:560px; margin:16px auto; padding:20px; border:2px solid #ffd700; border-radius:16px; background:rgba(255,215,0,0.06);">
             <p style="color:#ffd700; font-weight:800; font-size:1rem; margin-bottom:8px;">✅ RECOMMENDED — One click, logo included automatically</p>
             <p style="color:#ddd; font-size:0.95rem; margin-bottom:14px;">
-                Works with MetaMask, Trust Wallet, Coinbase Wallet, and most browser-extension or in-app wallets. This is the only method that adds the correct logo automatically — no extra steps, no hunting for an image field.
+                Choose your wallet below. Works on desktop and mobile — including if you're browsing normally and haven't opened your wallet app yet.
             </p>
-            <button onclick="addBtmToWallet()" style="display:inline-block; padding:14px 32px; border-radius:16px;
-                      background:linear-gradient(135deg,#ffd700,#ffb700); color:#1a1a1a; font-weight:800;
-                      text-decoration:none; font-size:1.05rem; border:none; cursor:pointer; box-shadow:0 4px 14px rgba(255,215,0,0.3);">
-                🦊 Add BTM to Wallet (Automatic)
-            </button>
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px;">
+                <button onclick="addBtmToSpecificWallet('metamask')" class="btn-secondary" style="padding:10px 20px;">🦊 MetaMask</button>
+                <button onclick="addBtmToSpecificWallet('trust')" class="btn-secondary" style="padding:10px 20px;">🛡️ Trust Wallet</button>
+                <button onclick="addBtmToSpecificWallet('coinbase')" class="btn-secondary" style="padding:10px 20px;">🔵 Coinbase Wallet App</button>
+            </div>
+            <p style="color:#888; font-size:0.85rem; margin-top:12px;">Using a different wallet? This works for any wallet app with a built-in browser:</p>
+            <button onclick="copyAddToWalletLink()" class="btn-secondary" style="padding:8px 20px; font-size:0.85rem; margin-top:4px;">📋 Copy This Page's Link</button>
+            <p id="addWalletCopyStatus" style="margin-top:6px; color:#888; font-size:0.85rem;"></p>
             <p id="addWalletStatus" style="margin-top:8px; color:#888; font-size:0.9rem;"></p>
         </div>
 
@@ -860,16 +863,26 @@
     })();
 
     // ---- ADD TO WALLET (AUTOMATIC, WITH LOGO) ----
-    async function addBtmToWallet() {
+    async function addBtmToSpecificWallet(walletName) {
         const statusEl = document.getElementById('addWalletStatus');
 
-        if (typeof window.ethereum === 'undefined') {
-            statusEl.textContent = '❌ No wallet extension detected. On mobile, use the manual steps below instead.';
-            statusEl.style.color = '#ff6666';
+        // Reuses the same WALLET_FLAGS / DEEP_LINKS defined later in this
+        // script for the claim feature - available by the time this runs,
+        // since it's only ever called after a user click, well after the
+        // whole script has finished loading.
+        const flag = WALLET_FLAGS[walletName];
+        const walletAvailable = typeof window.ethereum !== 'undefined' && window.ethereum[flag] === true;
+
+        if (!walletAvailable) {
+            const pageUrl = window.location.href;
+            const encodedUrl = encodeURIComponent(pageUrl);
+            const bareUrl = pageUrl.replace(/^https?:\/\//, '');
+            window.location.href = DEEP_LINKS[walletName](walletName === 'metamask' ? bareUrl : encodedUrl);
             return;
         }
 
         try {
+            statusEl.textContent = '';
             const wasAdded = await window.ethereum.request({
                 method: 'wallet_watchAsset',
                 params: {
@@ -892,7 +905,19 @@
             }
         } catch (err) {
             console.error('Add to wallet failed:', err);
-            statusEl.textContent = '❌ Something went wrong. Try the manual steps below instead.';
+            statusEl.textContent = '❌ Something went wrong. Try again, or use the copy-link option below.';
+            statusEl.style.color = '#ff6666';
+        }
+    }
+
+    async function copyAddToWalletLink() {
+        const statusEl = document.getElementById('addWalletCopyStatus');
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            statusEl.textContent = '✅ Link copied — now paste it into your wallet app\'s browser.';
+            statusEl.style.color = '#ffd700';
+        } catch (err) {
+            statusEl.textContent = 'Could not copy automatically — please copy the address bar link manually.';
             statusEl.style.color = '#ff6666';
         }
     }
