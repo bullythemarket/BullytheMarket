@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founding Supporters - Bully the Market</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 24px;
+            text-align: center;
+        }
+        h1 {
+            color: #ffd700;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .intro {
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 0.95rem;
+        }
+        table {
+            max-width: 700px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        th {
+            color: #ffd700;
+            background: rgba(255,215,0,0.05);
+        }
+        td { color: #ccc; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">&larr; Back to $BTM</a>
+    <h1>💎 Founding Supporters</h1>
+    <p class="intro">
+        These are the presale investors who've opted in to public recognition.
+        Want to be listed? Reach out in Telegram once your purchase confirms.
+    </p>
+    <table>
+        <tr>
+            <th>Name / Handle</th>
+            <th>Tier</th>
+        </tr>
+        <!-- Add a new row here for each opted-in supporter, e.g.: -->
+        <!-- <tr><td>YourHandle</td><td>🥇 Champion</td></tr> -->
+    </table>
+</body>
+</html>
