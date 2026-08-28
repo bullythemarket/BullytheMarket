@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Leaderboard - Bully the Market</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.5/ethers.umd.min.js"></script>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 24px;
+            text-align: center;
+        }
+        h1 {
+            color: #ffd700;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .intro {
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            font-size: 0.95rem;
+        }
+        #status {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        table {
+            max-width: 700px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        th {
+            color: #ffd700;
+            background: rgba(255,215,0,0.05);
+        }
+        td { color: #ccc; }
+        .rank-1 { color: #ffd700; font-weight: 700; }
+        .rank-2 { color: #c0c0c0; font-weight: 700; }
+        .rank-3 { color: #cd7f32; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">&larr; Back to $BTM</a>
+    <h1>🏆 Referral Leaderboard</h1>
+    <p class="intro">
+        Live, on-chain rankings of referral code usage — pulled directly from the presale contract, no manual updates involved.
+    </p>
+    <p id="status">Loading live data from the blockchain — this can take a minute...</p>
+    <table id="leaderboardTable" style="display:none;">
+        <tr>
+            <th>Rank</th>
+            <th>Referrer</th>
+            <th>Code</th>
+            <th>Successful Referrals</th>
+            <th>Claimable Bonus (BTM)</th>
+        </tr>
+        <tbody id="leaderboardBody"></tbody>
+    </table>
+
+    <script>
+    (async function loadLeaderboard() {
+        const statusEl = document.getElementById('status');
+        const tableEl = document.getElementById('leaderboardTable');
+        const bodyEl = document.getElementById('leaderboardBody');
+
+        const RPC_URL = 'https://bsc-dataseed.binance.org/';
+        const PRESALE_ADDRESS = '0xb03A51dC8f91C25729f15E686A3df281AC522B52';
+        const PRESALE_ABI = [
+            'event ReferralCodeCreated(string indexed code, address indexed referrer)',
+            'event ReferralUsed(address indexed buyer, string code)',
+            'function referrerBonus(address) view returns (uint256)',
+        ];
+        const CHUNK_SIZE = 4999;
+        const LOOKBACK_BLOCKS = 3000000;
+
+        async function queryChunked(contract, filter, fromBlock, toBlock) {
+            let results = [];
+            let start = fromBlock;
+            while (start <= toBlock) {
+                const end = Math.min(start + CHUNK_SIZE, toBlock);
+                try {
+                    const events = await contract.queryFilter(filter, start, end);
+                    results = results.concat(events);
+                } catch (e) { /* skip failed chunk */ }
+                start = end + 1;
+            }
+            return results;
+        }
+
+        try {
+            const provider = new ethers.JsonRpcProvider(RPC_URL);
+            const presale = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, provider);
+
+            const currentBlock = await provider.getBlockNumber();
+            const fromBlock = Math.max(0, currentBlock - LOOKBACK_BLOCKS);
+
+            const [codeEvents, usedEvents] = await Promise.all([
+                queryChunked(presale, presale.filters.ReferralCodeCreated(), fromBlock, currentBlock),
+                queryChunked(presale, presale.filters.ReferralUsed(), fromBlock, currentBlock),
+            ]);
+
+            // Map code -> referrer
+            const codeToReferrer = {};
+            for (const e of codeEvents) {
+                codeToReferrer[e.args.code] = e.args.referrer;
+            }
+
+            // Count usage per code
+            const usageCounts = {};
+            for (const e of usedEvents) {
+                usageCounts[e.args.code] = (usageCounts[e.args.code] || 0) + 1;
+            }
+
+            // Build leaderboard rows, fetching each referrer's current claimable bonus
+            const rows = [];
+            for (const [code, referrer] of Object.entries(codeToReferrer)) {
+                const count = usageCounts[code] || 0;
+                if (count === 0) continue; // only show codes that have actually been used
+                const bonus = await presale.referrerBonus(referrer);
+                rows.push({
+                    code,
+                    referrer,
+                    count,
+                    bonus: parseFloat(ethers.formatEther(bonus)),
+                });
+            }
+
+            rows.sort((a, b) => b.count - a.count);
+
+            if (rows.length === 0) {
+                statusEl.textContent = 'No referral activity yet — check back once referrals start coming in.';
+                return;
+            }
+
+            bodyEl.innerHTML = '';
+            rows.forEach((row, i) => {
+                const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : '';
+                const shortAddr = row.referrer.slice(0, 6) + '...' + row.referrer.slice(-4);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="${rankClass}">#${i + 1}</td>
+                    <td>${shortAddr}</td>
+                    <td>${row.code}</td>
+                    <td>${row.count}</td>
+                    <td>${row.bonus.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                `;
+                bodyEl.appendChild(tr);
+            });
+
+            statusEl.style.display = 'none';
+            tableEl.style.display = 'table';
+        } catch (err) {
+            console.error('Failed to load leaderboard:', err);
+            statusEl.textContent = 'Could not load live data. Please try refreshing the page.';
+        }
+    })();
+    </script>
+</body>
+</html>
