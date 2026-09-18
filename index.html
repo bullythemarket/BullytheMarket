@@ -410,6 +410,26 @@
         <p style="color:#888; font-size:0.9rem;">LP tokens permanently burned — this liquidity can never be withdrawn by anyone, including the founder</p>
     </div>
 
+    <!-- RISK SCANNER EXPLAINER -->
+    <div style="max-width:700px; margin:30px auto; padding:20px 24px; border:1px solid #444; border-radius:16px; background:rgba(255,255,255,0.02); text-align:left;">
+        <h3 style="color:#ffd700; text-align:center; margin-bottom:12px;">🛡️ Why PancakeSwap May Show a "High Risk" Warning</h3>
+        <p style="color:#ccc; font-size:0.9rem;">
+            If you see a HashDit risk warning when swapping $BTM, here's honestly what's behind it — no spin, just the real explanation.
+        </p>
+        <p style="color:#ccc; font-size:0.9rem; margin-top:10px;">
+            Automated scanners like HashDit flag any contract that technically <em>has</em> admin capabilities — a sell tax, a mint function, the ability to block specific addresses — regardless of who controls those capabilities or how. $BTM genuinely has these functions, fully disclosed in our whitepaper. What the scanner can't see is the context:
+        </p>
+        <ul style="color:#ccc; font-size:0.9rem; margin-top:10px; padding-left:20px;">
+            <li style="margin-bottom:6px;">Every admin function requires <strong style="color:#ffd700;">2-of-2 multisig approval</strong> — no single key, including the founder's, can act alone.</li>
+            <li style="margin-bottom:6px;">Both the <a href="https://bscscan.com/address/0x1016e99e7013272F00f1EA403016Db4a9550B309#code" target="_blank" style="color:#ffd700;">token</a> and the presale contract are <strong style="color:#ffd700;">verified on BscScan</strong> — the real source code is public, not just bytecode.</li>
+            <li style="margin-bottom:6px;">Liquidity is <strong style="color:#ffd700;">permanently burned</strong>, verifiable above — it can never be withdrawn.</li>
+            <li>The sell tax is fixed in code with <strong style="color:#ffd700;">no function to ever raise it</strong> — a common rug mechanism that's structurally impossible here.</li>
+        </ul>
+        <p style="color:#888; font-size:0.85rem; margin-top:12px;">
+            We'd rather explain this plainly than pretend the warning doesn't exist. A completed third-party audit remains on our roadmap and would further strengthen this picture — check every claim above yourself rather than taking our word for it.
+        </p>
+    </div>
+
     <!-- ROADMAP -->
     <h2 style="text-align:center; font-family:'Bebas Neue',sans-serif; font-size:2rem; margin:40px 0 10px;">
         <span class="gold-text">Roadmap</span> to Dominance
